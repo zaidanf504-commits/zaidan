@@ -1,0 +1,15 @@
+# robots.txt — Portofolio Muhamad Zaidan Faiz
+#
+# GANTI https://example.com dengan alamat situsmu setelah di-onlinekan.
+# Baris Sitemap harus berupa alamat lengkap, bukan path relatif.
+
+User-agent: *
+Allow: /
+
+# Folder alat dan catatan, tidak perlu diindeks mesin pencari.
+Disallow: /_build/
+Disallow: /_backup_2026-09-17/
+Disallow: /_audit-2026-09-17/
+Disallow: /.workbuddy-ai/
+
+Sitemap: https://example.com/sitemap.xml

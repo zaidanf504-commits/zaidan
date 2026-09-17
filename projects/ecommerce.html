@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="id" class="no-js">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Studi Kasus: ZiFood E-Commerce | Zaidan.</title>
+    <meta name="description" content="Studi kasus pembangunan ZiFood, platform e-commerce untuk UMKM: latar belakang masalah, peran, teknologi, dan hasilnya.">
+    <meta name="author" content="Muhamad Zaidan Faiz">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://example.com/projects/ecommerce.html">
+
+    <meta name="theme-color" content="#0e0e0e" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Zaidan Faiz">
+    <meta property="og:locale" content="id_ID">
+    <meta property="og:title" content="Studi Kasus: ZiFood E-Commerce">
+    <meta property="og:description" content="Platform e-commerce untuk UMKM: latar belakang masalah, peran, teknologi, dan hasilnya.">
+    <meta property="og:url" content="https://example.com/projects/ecommerce.html">
+    <meta property="og:image" content="https://example.com/image/og-cover.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Studi Kasus: ZiFood E-Commerce">
+    <meta name="twitter:description" content="Platform e-commerce untuk UMKM: latar belakang masalah, peran, teknologi, dan hasilnya.">
+    <meta name="twitter:image" content="https://example.com/image/og-cover.jpg">
+
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="alternate icon" href="../favicon-32.png" sizes="32x32">
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+
+    <script>
+        (function () {
+            var root = document.documentElement;
+            root.classList.remove('no-js');
+            root.classList.add('js-enabled');
+            var stored = null;
+            try { stored = localStorage.getItem('theme'); } catch (e) { }
+            var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (stored === 'dark' || (!stored && prefersDark)) {
+                root.classList.add('dark');
+            }
+        })();
+    </script>
+
+    <style>
+        html { background: #ffffff; }
+        html.dark { background: #0e0e0e; }
+    </style>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <link rel="stylesheet" href="../css/tailwind.css">
+    <link rel="stylesheet" href="../css/animations.css">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "ZiFood E-Commerce",
+      "applicationCategory": "BusinessApplication",
+      "description": "Platform e-commerce responsif dengan keranjang belanja interaktif dan manajemen produk dinamis untuk UMKM.",
+      "programmingLanguage": "PHP",
+      "datePublished": "2026-04",
+      "author": { "@type": "Person", "name": "Muhamad Zaidan Faiz" },
+      "image": "https://example.com/image/zifood.webp"
+    }
+    </script>
+
+    <noscript>
+        <style>
+            #preloader { display: none !important; }
+            .reveal, .reveal-3d, .fx-char { opacity: 1 !important; transform: none !important; }
+        </style>
+    </noscript>
+</head>
+<body class="antialiased bg-white dark:bg-[#0e0e0e] text-zinc-900 dark:text-white transition-colors duration-300 selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black" data-page-label="KASUS.">
+
+    <div class="fx-progress" aria-hidden="true"><div class="fx-progress__bar"></div></div>
+
+    <div id="preloader" class="fixed inset-0 z-[100] bg-[#0e0e0e] dark:bg-white flex flex-col items-center justify-center transition-colors duration-300">
+        <div class="relative text-5xl sm:text-7xl md:text-9xl font-black tracking-tighter">
+            <span class="text-outline opacity-40 select-none">KASUS.</span>
+            <span id="loader-text" class="absolute top-0 left-0 text-white dark:text-black overflow-hidden whitespace-nowrap w-0 border-r-4 border-white dark:border-black transition-all duration-75 select-none">KASUS.</span>
+        </div>
+
+        <div class="absolute bottom-0 left-0 w-full px-6 pb-8 md:px-12 md:pb-12 flex flex-col gap-4">
+            <div class="flex justify-between items-end text-white dark:text-black">
+                <span class="text-xs md:text-sm font-bold tracking-widest uppercase animate-pulse">Membuka Studi Kasus...</span>
+                <span id="loader-counter" class="text-6xl md:text-8xl font-black leading-none tracking-tighter">0%</span>
+            </div>
+            <div class="w-full h-[2px] bg-gray-800 dark:bg-gray-300 overflow-hidden">
+                <div id="loader-bar" class="h-full bg-white dark:bg-black w-0 transition-all duration-75"></div>
+            </div>
+        </div>
+    </div>
+
+    <nav id="navbar" class="fixed w-full top-0 z-50 glass-nav bg-white/80 dark:bg-[#0e0e0e]/80 border-b border-gray-200 dark:border-borderdark transition-colors duration-300">
+        <div class="max-w-4xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="../projects.html" class="flex items-center gap-2 font-bold hover:text-gray-500 dark:hover:text-textmuted transition-colors">
+                <i class='bx bx-left-arrow-alt text-xl'></i> Kembali ke Arsip
+            </a>
+            <div class="flex items-center gap-3">
+                <button id="theme-toggle" aria-label="Ganti mode terang atau gelap" aria-pressed="false" class="text-xl text-gray-500 dark:text-textmuted hover:text-black dark:hover:text-white transition-all">
+                    <i class='bx bx-moon dark:hidden'></i><i class='bx bx-sun hidden dark:block'></i>
+                </button>
+                <button id="hamburger" aria-label="Buka menu navigasi" aria-expanded="false" aria-controls="mobile-menu" class="md:hidden text-2xl text-black dark:text-white"><i class='bx bx-menu'></i></button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="mobile-menu" aria-hidden="true" class="fixed inset-0 bg-white dark:bg-[#0e0e0e] z-40 transform translate-y-full transition-transform duration-500 flex flex-col justify-center items-center gap-8 text-2xl font-bold">
+        <button id="close-menu" aria-label="Tutup menu navigasi" class="absolute top-6 right-6 text-4xl text-gray-500 dark:text-textmuted"><i class='bx bx-x'></i></button>
+        <a href="../index.html" class="mobile-link text-gray-500 dark:text-textmuted hover:text-black dark:hover:text-white">Rumah</a>
+        <a href="../projects.html" class="mobile-link text-black dark:text-white">Proyek</a>
+        <a href="../about.html" class="mobile-link text-gray-500 dark:text-textmuted hover:text-black dark:hover:text-white">Tentang</a>
+        <a href="../index.html#contact" class="mobile-link text-gray-500 dark:text-textmuted hover:text-black dark:hover:text-white">Kontak</a>
+    </div>
+
+    <main class="pt-32 pb-16">
+        <header class="max-w-4xl mx-auto px-6 text-center mb-16">
+            <div class="inline-block px-4 py-2 mb-4 text-xs font-bold border border-gray-300 dark:border-zinc-700 rounded-full tracking-widest uppercase reveal">Proyek Full-Stack</div>
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight reveal" data-fx-split>ZiFood E-Commerce</h1>
+            <p class="text-gray-600 dark:text-zinc-400 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed reveal">
+                Platform e-commerce responsif dengan keranjang belanja interaktif dan manajemen produk dinamis, dibuat untuk membantu UMKM menertibkan pesanan yang sebelumnya tercampur di chat.
+            </p>
+
+            <div class="fx-tilt mt-12 w-full reveal-3d" data-fx-tilt="6">
+                <div class="fx-tilt__shadow"></div>
+                <div class="fx-tilt__inner">
+                    <div class="fx-tilt__layer w-full h-[300px] md:h-[500px] bg-gray-100 dark:bg-carddark rounded-3xl overflow-hidden flex items-center justify-center border border-gray-200 dark:border-borderdark shadow-2xl">
+                        <img src="../image/zifood.webp" width="1400" height="680"
+                             alt="Tangkapan layar halaman katalog platform ZiFood"
+                             decoding="async"
+                             class="w-full h-full object-cover object-top grayscale hover:grayscale-0 transition-all duration-700">
+                    </div>
+                    <div class="fx-tilt__glare rounded-3xl"></div>
+                </div>
+            </div>
+        </header>
+
+        <div class="max-w-4xl mx-auto px-6 grid md:grid-cols-3 gap-12">
+            <aside class="space-y-8 md:col-span-1 md:border-r border-gray-200 dark:border-zinc-800 md:pr-6 reveal">
+                <div>
+                    <h2 class="text-sm font-bold text-gray-500 dark:text-textmuted uppercase tracking-wider mb-3">Peran</h2>
+                    <p class="font-medium text-lg">Full-Stack Developer &amp; UI Designer</p>
+                </div>
+                <div>
+                    <h2 class="text-sm font-bold text-gray-500 dark:text-textmuted uppercase tracking-wider mb-3">Periode</h2>
+                    <p class="font-medium text-lg">Februari &mdash; April 2026</p>
+                </div>
+                <div>
+                    <h2 class="text-sm font-bold text-gray-500 dark:text-textmuted uppercase tracking-wider mb-3">Teknologi</h2>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="fx-chip px-3 py-1 bg-gray-100 dark:bg-zinc-800 rounded-lg text-sm font-medium border border-gray-200 dark:border-zinc-700">Laravel 12</span>
+                        <span class="fx-chip px-3 py-1 bg-gray-100 dark:bg-zinc-800 rounded-lg text-sm font-medium border border-gray-200 dark:border-zinc-700">TailwindCSS</span>
+                        <span class="fx-chip px-3 py-1 bg-gray-100 dark:bg-zinc-800 rounded-lg text-sm font-medium border border-gray-200 dark:border-zinc-700">MySQL</span>
+                    </div>
+                </div>
+                <div>
+                    <h2 class="text-sm font-bold text-gray-500 dark:text-textmuted uppercase tracking-wider mb-3">Tautan</h2>
+                    <ul class="space-y-3 text-sm">
+                        <li>
+                            <a href="https://github.com/zaidanf504-commits" target="_blank" rel="noopener" class="flex items-center gap-2 font-medium hover:text-gray-500 dark:hover:text-textmuted transition-colors">
+                                <i class='bx bxl-github text-lg'></i> Repositori GitHub
+                            </a>
+                        </li>
+                        <!-- Belum ada demo online. Setelah kamu punya, aktifkan baris ini:
+
+                        <li>
+                            <a href="https://ALAMAT-DEMO-KAMU" target="_blank" rel="noopener" class="flex items-center gap-2 font-medium hover:text-gray-500 dark:hover:text-textmuted transition-colors">
+                                <i class='bx bx-link-external text-lg'></i> Lihat demo langsung
+                            </a>
+                        </li>
+
+                        -->
+                    </ul>
+                </div>
+            </aside>
+
+            <article class="md:col-span-2 space-y-12">
+                <section class="reveal-3d">
+                    <h2 class="text-3xl font-bold mb-4 border-b-2 border-black dark:border-white pb-2 inline-block">1. Situasi</h2>
+                    <p class="text-gray-600 dark:text-zinc-400 text-lg leading-relaxed mt-2">
+                        Sebuah UMKM lokal kesulitan mengelola pesanan yang masuk melalui WhatsApp secara manual. Mereka membutuhkan sebuah platform etalase digital yang memungkinkan pembeli melihat katalog, memasukkan barang ke keranjang, dan melakukan checkout terpusat.
+                    </p>
+                </section>
+
+                <section class="reveal-3d">
+                    <h2 class="text-3xl font-bold mb-4 border-b-2 border-black dark:border-white pb-2 inline-block">2. Tugas</h2>
+                    <p class="text-gray-600 dark:text-zinc-400 text-lg leading-relaxed mt-2">
+                        Tugas saya adalah merancang antarmukanya di Figma, lalu menerjemahkannya menjadi aplikasi web yang berfungsi penuh dengan memprioritaskan kemudahan penggunaan: alur belanja yang pendek, status keranjang yang selalu terlihat, dan proses checkout yang tidak membingungkan.
+                    </p>
+                </section>
+
+                <section class="reveal-3d">
+                    <h2 class="text-3xl font-bold mb-4 border-b-2 border-black dark:border-white pb-2 inline-block">3. Hasil</h2>
+                    <p class="text-gray-600 dark:text-zinc-400 text-lg leading-relaxed mt-2">
+                        Aplikasi berjalan dari ujung ke ujung: pembeli bisa menelusuri katalog, memfilter produk berdasarkan kategori, mencari secara real-time, menambahkan produk ke keranjang, lalu menyelesaikan pesanan dalam satu alur. Pencatatan pesanan yang sebelumnya tersebar di chat kini terpusat di satu dasbor.
+                    </p>
+                </section>
+
+                <!-- Tambahkan bagian "4. Kendala & Solusi" di sini kalau kamu mau.
+                     Isi dengan masalah nyata yang kamu hadapi saat membangun proyek ini
+                     dan cara kamu menyelesaikannya. Bagian ini yang paling sering dibaca
+                     orang teknis, karena menunjukkan cara kamu berpikir. Contoh format:
+
+                <section class="reveal-3d">
+                    <h2 class="text-3xl font-bold mb-4 border-b-2 border-black dark:border-white pb-2 inline-block">4. Kendala &amp; Solusi</h2>
+                    <p class="text-gray-600 dark:text-zinc-400 text-lg leading-relaxed mt-2">
+                        Masalahnya adalah ... Saya mengatasinya dengan ...
+                    </p>
+                </section>
+
+                -->
+
+                <section class="reveal-3d">
+                    <div class="p-8 rounded-3xl border border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-carddark">
+                        <h2 class="text-2xl font-bold mb-3">Punya pertanyaan soal proyek ini?</h2>
+                        <p class="text-gray-600 dark:text-textmuted leading-relaxed mb-6">
+                            Saya senang menjelaskan keputusan teknis di baliknya &mdash; kenapa memilih struktur itu, apa yang saya ubah di tengah jalan, dan apa yang akan saya kerjakan berbeda lain kali.
+                        </p>
+                        <a href="../index.html#contact" class="fx-magnetic inline-flex items-center gap-2 px-6 py-3 rounded-full bg-black text-white dark:bg-white dark:text-black font-semibold hover:bg-gray-800 dark:hover:bg-gray-200 transition-all text-sm">
+                            Hubungi saya <i class='bx bx-right-arrow-alt text-lg'></i>
+                        </a>
+                    </div>
+                </section>
+            </article>
+        </div>
+
+        <div class="max-w-4xl mx-auto px-6 mt-20">
+            <a href="../projects.html" class="fx-magnetic inline-flex items-center gap-2 font-bold hover:text-gray-500 dark:hover:text-textmuted transition-colors">
+                <i class='bx bx-left-arrow-alt text-xl'></i> Kembali ke semua proyek
+            </a>
+        </div>
+    </main>
+
+    <footer class="border-t border-gray-200 dark:border-borderdark bg-grid relative pt-16 pb-10 transition-colors duration-300">
+        <button id="backToTop" aria-label="Kembali ke atas halaman" class="absolute -top-6 left-1/2 -translate-x-1/2 flex items-center gap-2 px-6 py-3 rounded-full bg-white dark:bg-carddark border border-gray-300 dark:border-borderdark text-sm font-bold text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black shadow-md transition-all">
+            <i class='bx bx-chevron-up text-lg'></i> Kembali ke atas
+        </button>
+
+        <div class="max-w-4xl mx-auto px-6 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-gray-500 dark:text-textmuted">
+            <p>&copy; <span id="year"></span> Muhamad Zaidan Faiz.</p>
+            <div class="flex items-center gap-5">
+                <a href="https://github.com/zaidanf504-commits" target="_blank" rel="noopener" aria-label="GitHub Zaidan" class="hover:text-black dark:hover:text-white transition-colors"><i class='bx bxl-github text-xl'></i></a>
+                <a href="https://www.instagram.com/jidan_corei5/" target="_blank" rel="noopener" aria-label="Instagram Zaidan" class="hover:text-black dark:hover:text-white transition-colors"><i class='bx bxl-instagram text-xl'></i></a>
+                <a href="mailto:zaidanf504@gmail.com" aria-label="Kirim email ke Zaidan" class="hover:text-black dark:hover:text-white transition-colors"><i class='bx bx-envelope text-xl'></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/animations.js"></script>
+</body>
+</html>

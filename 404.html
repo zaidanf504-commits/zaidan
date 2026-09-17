@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="id" class="no-js">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Halaman Tidak Ditemukan | Zaidan.</title>
+    <meta name="description" content="Halaman yang kamu cari tidak ada di portofolio Zaidan Faiz. Kembali ke beranda atau lihat daftar proyek.">
+    <meta name="robots" content="noindex, follow">
+
+    <meta name="theme-color" content="#0e0e0e" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+
+    <!-- Halaman 404 sengaja TIDAK punya canonical dan JSON-LD.
+         Keduanya justru salah di sini: canonical menunjuk halaman yang tidak
+         ada, dan data terstruktur untuk halaman yang tidak boleh diindeks
+         hanya membingungkan mesin pencari. Cukup noindex di atas.
+
+         Tag Open Graph tetap dipasang supaya kalau ada yang membagikan alamat
+         rusak, yang muncul tetap identitas situs, bukan URL gundul. -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Zaidan Faiz">
+    <meta property="og:locale" content="id_ID">
+    <meta property="og:title" content="Halaman Tidak Ditemukan | Zaidan.">
+    <meta property="og:description" content="Halaman yang kamu cari tidak ada. Kembali ke beranda atau lihat daftar proyek.">
+    <meta property="og:image" content="https://example.com/image/og-cover.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Halaman Tidak Ditemukan | Zaidan.">
+    <meta name="twitter:description" content="Halaman yang kamu cari tidak ada. Kembali ke beranda atau lihat daftar proyek.">
+    <meta name="twitter:image" content="https://example.com/image/og-cover.jpg">
+
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="alternate icon" href="favicon-32.png" sizes="32x32">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+    <script>
+        (function () {
+            var root = document.documentElement;
+            root.classList.remove('no-js');
+            root.classList.add('js-enabled');
+            var stored = null;
+            try { stored = localStorage.getItem('theme'); } catch (e) { }
+            var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (stored === 'dark' || (!stored && prefersDark)) {
+                root.classList.add('dark');
+            }
+        })();
+    </script>
+
+    <style>
+        html { background: #ffffff; }
+        html.dark { background: #0e0e0e; }
+    </style>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <link rel="stylesheet" href="css/tailwind.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+<body class="antialiased selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black bg-white dark:bg-[#0e0e0e] text-black dark:text-white transition-colors duration-300" data-page-label="404.">
+
+    <div class="fx-progress" aria-hidden="true"><div class="fx-progress__bar"></div></div>
+
+    <nav id="navbar" class="fixed w-full top-0 z-50 glass-nav bg-white/80 dark:bg-[#0e0e0e]/80 border-b border-gray-200 dark:border-borderdark transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" aria-label="Beranda Zaidan Faiz" class="bg-black text-white dark:bg-white dark:text-black font-bold text-xl px-3 py-1.5 rounded-sm tracking-tight transition-colors">ZAIDAN</a>
+
+            <ul class="hidden md:flex gap-8 items-center font-medium text-sm text-gray-500 dark:text-textmuted">
+                <li><a href="index.html" class="hover:text-black dark:hover:text-white transition-colors">Rumah</a></li>
+                <li><a href="projects.html" class="hover:text-black dark:hover:text-white transition-colors">Proyek</a></li>
+                <li><a href="about.html" class="hover:text-black dark:hover:text-white transition-colors">Tentang</a></li>
+                <li><a href="index.html#contact" class="hover:text-black dark:hover:text-white transition-colors">Kontak</a></li>
+            </ul>
+
+            <div class="hidden md:flex items-center gap-4 text-sm font-medium">
+                <button id="theme-toggle" aria-label="Ganti mode terang atau gelap" aria-pressed="false" class="mr-2 text-xl text-gray-500 dark:text-textmuted hover:text-black dark:hover:text-white transition-all">
+                    <i class='bx bx-moon dark:hidden'></i>
+                    <i class='bx bx-sun hidden dark:block'></i>
+                </button>
+                <a href="mailto:zaidanf504@gmail.com" class="fx-magnetic flex items-center gap-2 px-4 py-2.5 rounded-full border border-gray-300 dark:border-borderdark hover:bg-black/5 dark:hover:bg-white/5 transition-all text-gray-600 dark:text-textmuted hover:text-black dark:hover:text-white">
+                    <i class='bx bx-envelope'></i> Email
+                </a>
+                <a href="index.html" class="fx-magnetic flex items-center gap-2 px-5 py-2.5 rounded-full bg-black text-white dark:bg-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 transition-all">
+                    Ke Beranda <i class='bx bx-right-arrow-alt'></i>
+                </a>
+            </div>
+
+            <div class="md:hidden flex items-center gap-4">
+                <button id="theme-toggle-mobile" aria-label="Ganti mode terang atau gelap" aria-pressed="false" class="text-xl text-black dark:text-white">
+                    <i class='bx bx-moon dark:hidden'></i>
+                    <i class='bx bx-sun hidden dark:block'></i>
+                </button>
+                <button id="hamburger" aria-label="Buka menu navigasi" aria-expanded="false" aria-controls="mobile-menu" class="text-2xl text-black dark:text-white"><i class='bx bx-menu'></i></button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="mobile-menu" aria-hidden="true" class="fixed inset-0 bg-white dark:bg-[#0e0e0e] z-40 transform translate-y-full transition-transform duration-500 flex flex-col justify-center items-center gap-8 text-2xl font-bold">
+        <button id="close-menu" aria-label="Tutup menu navigasi" class="absolute top-6 right-6 text-4xl text-gray-500 dark:text-textmuted"><i class='bx bx-x'></i></button>
+        <a href="index.html" class="mobile-link text-gray-500 dark:text-textmuted hover:text-black dark:hover:text-white">Rumah</a>
+        <a href="projects.html" class="mobile-link text-gray-500 dark:text-textmuted hover:text-black dark:hover:text-white">Proyek</a>
+        <a href="about.html" class="mobile-link text-gray-500 dark:text-textmuted hover:text-black dark:hover:text-white">Tentang</a>
+        <a href="index.html#contact" class="mobile-link text-gray-500 dark:text-textmuted hover:text-black dark:hover:text-white">Kontak</a>
+    </div>
+
+    <main class="relative min-h-screen flex items-center justify-center overflow-hidden bg-grid pt-32 pb-20">
+        <canvas id="fx-hero-canvas" aria-hidden="true"></canvas>
+
+        <div class="relative z-10 max-w-3xl mx-auto px-6 text-center">
+            <p class="text-xs font-bold tracking-[0.3em] uppercase text-gray-500 dark:text-textmuted mb-6 reveal">
+                Kode Kesalahan 404
+            </p>
+
+            <div class="text-[7rem] sm:text-[10rem] md:text-[13rem] font-black leading-none tracking-tighter text-outline select-none mb-2 reveal" aria-hidden="true">
+                404
+            </div>
+
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-black leading-tight mb-6 reveal" data-fx-split>
+                Halaman ini tidak ada.
+            </h1>
+
+            <p class="text-lg text-gray-600 dark:text-textmuted leading-relaxed mb-10 max-w-xl mx-auto reveal">
+                Alamatnya salah ketik, atau halamannya sudah dipindahkan. Tidak masalah &mdash; dua tautan di bawah akan membawamu kembali ke tempat yang benar.
+            </p>
+
+            <div class="flex flex-wrap gap-3 md:gap-4 justify-center reveal">
+                <a href="index.html" class="fx-magnetic px-6 py-3 md:px-8 md:py-4 rounded-full bg-black text-white dark:bg-white dark:text-black font-semibold hover:bg-gray-800 dark:hover:bg-gray-200 transition-all flex items-center justify-center gap-2 shadow-lg text-sm md:text-base w-full sm:w-auto">
+                    <i class='bx bx-home-alt text-lg'></i> Kembali ke Beranda
+                </a>
+                <a href="projects.html" class="fx-magnetic px-6 py-3 md:px-8 md:py-4 rounded-full border border-gray-300 dark:border-borderdark text-black dark:text-white font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition-all flex items-center justify-center gap-2 text-sm md:text-base w-full sm:w-auto">
+                    Lihat Arsip Proyek <i class='bx bx-right-arrow-alt text-lg'></i>
+                </a>
+            </div>
+
+            <div class="mt-16 pt-8 border-t border-gray-200 dark:border-borderdark reveal">
+                <p class="text-xs font-bold tracking-widest uppercase text-gray-500 dark:text-textmuted mb-4">Halaman yang tersedia</p>
+                <div class="flex flex-wrap gap-x-6 gap-y-2 justify-center text-sm font-semibold text-gray-600 dark:text-textmuted">
+                    <a href="index.html" class="hover:text-black dark:hover:text-white transition-colors">Rumah</a>
+                    <a href="projects.html" class="hover:text-black dark:hover:text-white transition-colors">Proyek</a>
+                    <a href="about.html" class="hover:text-black dark:hover:text-white transition-colors">Tentang</a>
+                    <a href="projects/ecommerce.html" class="hover:text-black dark:hover:text-white transition-colors">ZiFood</a>
+                    <a href="projects/jurnal-pkl.html" class="hover:text-black dark:hover:text-white transition-colors">Jurnal PKL</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/main.js"></script>
+    <script src="js/animations.js"></script>
+</body>
+</html>

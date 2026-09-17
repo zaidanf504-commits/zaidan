@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="id" class="no-js">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Arsip Proyek | Zaidan.</title>
+    <meta name="description" content="Kumpulan karya digital Muhamad Zaidan Faiz: platform e-commerce ZiFood dan sistem laporan PKL Jurnal PKL. Dibangun dengan Laravel, Next.js, dan Tailwind CSS.">
+    <meta name="author" content="Muhamad Zaidan Faiz">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://example.com/projects.html">
+
+    <meta name="theme-color" content="#0e0e0e" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Zaidan Faiz">
+    <meta property="og:locale" content="id_ID">
+    <meta property="og:title" content="Arsip Proyek | Zaidan.">
+    <meta property="og:description" content="Kumpulan karya digital: platform e-commerce ZiFood dan sistem laporan PKL.">
+    <meta property="og:url" content="https://example.com/projects.html">
+    <meta property="og:image" content="https://example.com/image/og-cover.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Arsip Proyek | Zaidan.">
+    <meta name="twitter:description" content="Kumpulan karya digital: platform e-commerce ZiFood dan sistem laporan PKL.">
+    <meta name="twitter:image" content="https://example.com/image/og-cover.jpg">
+
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="alternate icon" href="favicon-32.png" sizes="32x32">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+    <script>
+        (function () {
+            var root = document.documentElement;
+            root.classList.remove('no-js');
+            root.classList.add('js-enabled');
+            var stored = null;
+            try { stored = localStorage.getItem('theme'); } catch (e) { }
+            var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (stored === 'dark' || (!stored && prefersDark)) {
+                root.classList.add('dark');
+            }
+        })();
+    </script>
+
+    <style>
+        html { background: #ffffff; }
+        html.dark { background: #0e0e0e; }
+    </style>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <link rel="stylesheet" href="css/tailwind.css">
+    <link rel="stylesheet" href="css/animations.css">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": "Arsip Proyek Zaidan Faiz",
+      "author": { "@type": "Person", "name": "Muhamad Zaidan Faiz" },
+      "hasPart": [
+        {
+          "@type": "SoftwareApplication",
+          "name": "ZiFood Platform",
+          "applicationCategory": "BusinessApplication",
+          "description": "Sistem pemesanan makanan interaktif dengan keranjang belanja dinamis dan checkout terpusat.",
+          "programmingLanguage": "PHP",
+          "author": { "@type": "Person", "name": "Muhamad Zaidan Faiz" }
+        },
+        {
+          "@type": "SoftwareApplication",
+          "name": "Jurnal PKL",
+          "applicationCategory": "BusinessApplication",
+          "description": "Aplikasi monitoring logbook siswa magang dengan hak akses berlapis.",
+          "programmingLanguage": "JavaScript",
+          "author": { "@type": "Person", "name": "Muhamad Zaidan Faiz" }
+        }
+      ]
+    }
+    </script>
+
+    <noscript>
+        <style>
+            #preloader { display: none !important; }
+            .reveal, .reveal-3d, .fx-char { opacity: 1 !important; transform: none !important; }
+        </style>
+    </noscript>
+</head>
+<body class="antialiased selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black bg-white dark:bg-[#0e0e0e] text-black dark:text-white transition-colors duration-300" data-page-label="PROYEK.">
+
+    <div class="fx-progress" aria-hidden="true"><div class="fx-progress__bar"></div></div>
+
+    <div id="preloader" class="fixed inset-0 z-[100] bg-[#0e0e0e] dark:bg-white flex flex-col items-center justify-center transition-colors duration-300">
+        <div class="relative text-5xl sm:text-7xl md:text-9xl font-black tracking-tighter">
+            <span class="text-outline opacity-40 select-none">PROYEK.</span>
+            <span id="loader-text" class="absolute top-0 left-0 text-white dark:text-black overflow-hidden whitespace-nowrap w-0 border-r-4 border-white dark:border-black transition-all duration-75 select-none">PROYEK.</span>
+        </div>
+
+        <div class="absolute bottom-0 left-0 w-full px-6 pb-8 md:px-12 md:pb-12 flex flex-col gap-4">
+            <div class="flex justify-between items-end text-white dark:text-black">
+                <span class="text-xs md:text-sm font-bold tracking-widest uppercase animate-pulse">Memuat Arsip...</span>
+                <span id="loader-counter" class="text-6xl md:text-8xl font-black leading-none tracking-tighter">0%</span>
+            </div>
+            <div class="w-full h-[2px] bg-gray-800 dark:bg-gray-300 overflow-hidden">
+                <div id="loader-bar" class="h-full bg-white dark:bg-black w-0 transition-all duration-75"></div>
+            </div>
+        </div>
+    </div>
+
+    <nav id="navbar" class="fixed w-full top-0 z-50 glass-nav bg-white/80 dark:bg-[#0e0e0e]/80 border-b border-gray-200 dark:border-borderdark transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" aria-label="Beranda Zaidan Faiz" class="bg-black text-white dark:bg-white dark:text-black font-bold text-xl px-3 py-1.5 rounded-sm tracking-tight transition-colors">ZAIDAN</a>
+
+            <ul class="hidden md:flex gap-8 items-center font-medium text-sm text-gray-500 dark:text-textmuted">
+                <li><a href="index.html" class="hover:text-black dark:hover:text-white transition-colors">Rumah</a></li>
+                <li><a href="projects.html" aria-current="page" class="text-black dark:text-white border-b-2 border-black dark:border-white pb-1 transition-colors">Proyek</a></li>
+                <li><a href="about.html" class="hover:text-black dark:hover:text-white transition-colors">Tentang</a></li>
+                <li><a href="index.html#contact" class="hover:text-black dark:hover:text-white transition-colors">Kontak</a></li>
+            </ul>
+
+            <div class="hidden md:flex items-center gap-4 text-sm font-medium">
+                <button id="theme-toggle" aria-label="Ganti mode terang atau gelap" aria-pressed="false" class="mr-2 text-xl text-gray-500 dark:text-textmuted hover:text-black dark:hover:text-white transition-all">
+                    <i class='bx bx-moon dark:hidden'></i>
+                    <i class='bx bx-sun hidden dark:block'></i>
+                </button>
+                <a href="mailto:zaidanf504@gmail.com" class="fx-magnetic flex items-center gap-2 px-4 py-2.5 rounded-full border border-gray-300 dark:border-borderdark hover:bg-black/5 dark:hover:bg-white/5 transition-all text-gray-600 dark:text-textmuted hover:text-black dark:hover:text-white">
+                    <i class='bx bx-envelope'></i> Email
+                </a>
+                <a href="index.html#contact" class="fx-magnetic flex items-center gap-2 px-5 py-2.5 rounded-full bg-black text-white dark:bg-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 transition-all">
+                    Sapa Saya <i class='bx bx-send'></i>
+                </a>
+            </div>
+
+            <div class="md:hidden flex items-center gap-4">
+                <button id="theme-toggle-mobile" aria-label="Ganti mode terang atau gelap" aria-pressed="false" class="text-xl text-black dark:text-white">
+                    <i class='bx bx-moon dark:hidden'></i>
+                    <i class='bx bx-sun hidden dark:block'></i>
+                </button>
+                <button id="hamburger" aria-label="Buka menu navigasi" aria-expanded="false" aria-controls="mobile-menu" class="text-2xl text-black dark:text-white"><i class='bx bx-menu'></i></button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="mobile-menu" aria-hidden="true" class="fixed inset-0 bg-white dark:bg-[#0e0e0e] z-40 transform translate-y-full transition-transform duration-500 flex flex-col justify-center items-center gap-8 text-2xl font-bold">
+        <button id="close-menu" aria-label="Tutup menu navigasi" class="absolute top-6 right-6 text-4xl text-gray-500 dark:text-textmuted"><i class='bx bx-x'></i></button>
+        <a href="index.html" class="mobile-link text-gray-500 dark:text-textmuted hover:text-black dark:hover:text-white">Rumah</a>
+        <a href="projects.html" class="mobile-link text-black dark:text-white">Proyek</a>
+        <a href="about.html" class="mobile-link text-gray-500 dark:text-textmuted hover:text-black dark:hover:text-white">Tentang</a>
+        <a href="index.html#contact" class="mobile-link text-gray-500 dark:text-textmuted hover:text-black dark:hover:text-white">Kontak</a>
+        <a href="mailto:zaidanf504@gmail.com" class="mobile-link text-gray-500 dark:text-textmuted hover:text-black dark:hover:text-white text-lg font-medium mt-4">zaidanf504@gmail.com</a>
+    </div>
+
+    <main class="pt-32 pb-20 md:pt-40 md:pb-32 max-w-7xl mx-auto px-6 relative bg-grid min-h-screen">
+        <div class="absolute top-10 md:top-20 right-0 w-64 h-64 md:w-96 md:h-96 bg-black/5 dark:bg-white/5 rounded-full blur-[120px] pointer-events-none transition-colors duration-300"></div>
+
+        <div class="flex items-center gap-4 mb-8 reveal">
+            <div class="w-8 h-[1px] bg-gray-400 dark:bg-textmuted"></div>
+            <h3 class="text-sm font-bold tracking-widest text-gray-500 dark:text-textmuted uppercase">Arsip Lengkap</h3>
+        </div>
+
+        <h1 class="text-5xl md:text-7xl lg:text-[6rem] font-black mb-6 leading-[1] tracking-tight reveal" data-fx-split>
+            KUMPULAN <span class="text-outline">KARYA</span>
+        </h1>
+        <p class="text-lg md:text-xl text-gray-600 dark:text-textmuted max-w-2xl leading-relaxed mb-16 md:mb-20 reveal">
+            Dua proyek yang paling saya banggakan sejauh ini. Masing-masing punya halaman studi kasus yang menjelaskan masalah, proses, dan hasilnya.
+        </p>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl">
+            <a href="projects/ecommerce.html" data-fx-card="8" class="fx-card-3d group flex flex-col bg-gray-50 dark:bg-carddark rounded-3xl border border-gray-200 dark:border-borderdark reveal-3d">
+                <div class="h-[220px] sm:h-[280px] w-full overflow-hidden bg-gray-200 dark:bg-bgdark relative border-b border-gray-200 dark:border-borderdark rounded-t-3xl">
+                    <img src="image/zifood.webp" width="1400" height="680"
+                         alt="Tangkapan layar platform pemesanan makanan ZiFood"
+                         loading="lazy" decoding="async"
+                         class="fx-card-img absolute inset-0 w-full h-full object-cover object-top grayscale">
+                </div>
+                <div class="p-8 flex flex-col flex-grow">
+                    <div class="flex justify-between items-start mb-2">
+                        <h2 class="text-2xl font-bold text-black dark:text-white group-hover:text-gray-500 transition-colors">ZiFood Platform</h2>
+                        <i class='bx bx-top-right-arrow text-2xl text-gray-400 dark:text-textmuted group-hover:text-black dark:group-hover:text-white transition-colors'></i>
+                    </div>
+                    <p class="text-[11px] font-bold tracking-widest text-gray-500 dark:text-textmuted uppercase mb-4">PROYEK E-COMMERCE</p>
+                    <p class="text-gray-600 dark:text-textmuted text-sm leading-relaxed mb-8 flex-grow">Sistem pemesanan makanan interaktif dengan keranjang belanja dinamis dan alur checkout terpusat untuk UMKM.</p>
+                    <div class="flex flex-wrap gap-2 mt-auto">
+                        <span class="fx-chip px-3 py-1 bg-white dark:bg-bgdark border border-gray-200 dark:border-borderdark rounded-lg text-xs font-bold text-gray-600 dark:text-textmuted shadow-sm">Laravel</span>
+                        <span class="fx-chip px-3 py-1 bg-white dark:bg-bgdark border border-gray-200 dark:border-borderdark rounded-lg text-xs font-bold text-gray-600 dark:text-textmuted shadow-sm">Tailwind CSS</span>
+                        <span class="fx-chip px-3 py-1 bg-white dark:bg-bgdark border border-gray-200 dark:border-borderdark rounded-lg text-xs font-bold text-gray-600 dark:text-textmuted shadow-sm">MySQL</span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="projects/jurnal-pkl.html" data-fx-card="8" class="fx-card-3d group flex flex-col bg-gray-50 dark:bg-carddark rounded-3xl border border-gray-200 dark:border-borderdark reveal-3d">
+                <div class="h-[220px] sm:h-[280px] w-full overflow-hidden bg-gray-200 dark:bg-bgdark relative border-b border-gray-200 dark:border-borderdark rounded-t-3xl">
+                    <img src="image/magang.webp" width="1400" height="669"
+                         alt="Tangkapan layar aplikasi Jurnal PKL"
+                         loading="lazy" decoding="async"
+                         class="fx-card-img absolute inset-0 w-full h-full object-cover object-top grayscale">
+                </div>
+                <div class="p-8 flex flex-col flex-grow">
+                    <div class="flex justify-between items-start mb-2">
+                        <h2 class="text-2xl font-bold text-black dark:text-white group-hover:text-gray-500 transition-colors">Jurnal PKL</h2>
+                        <i class='bx bx-top-right-arrow text-2xl text-gray-400 dark:text-textmuted group-hover:text-black dark:group-hover:text-white transition-colors'></i>
+                    </div>
+                    <p class="text-[11px] font-bold tracking-widest text-gray-500 dark:text-textmuted uppercase mb-4">SISTEM MANAJEMEN</p>
+                    <p class="text-gray-600 dark:text-textmuted text-sm leading-relaxed mb-8 flex-grow">Aplikasi monitoring logbook siswa magang dengan arsitektur hak akses berlapis untuk siswa, guru, dan industri.</p>
+                    <div class="flex flex-wrap gap-2 mt-auto">
+                        <span class="fx-chip px-3 py-1 bg-white dark:bg-bgdark border border-gray-200 dark:border-borderdark rounded-lg text-xs font-bold text-gray-600 dark:text-textmuted shadow-sm">Next.js</span>
+                        <span class="fx-chip px-3 py-1 bg-white dark:bg-bgdark border border-gray-200 dark:border-borderdark rounded-lg text-xs font-bold text-gray-600 dark:text-textmuted shadow-sm">Supabase</span>
+                        <span class="fx-chip px-3 py-1 bg-white dark:bg-bgdark border border-gray-200 dark:border-borderdark rounded-lg text-xs font-bold text-gray-600 dark:text-textmuted shadow-sm">UI/UX</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="mt-16 md:mt-20 p-8 md:p-10 rounded-3xl border border-gray-200 dark:border-borderdark bg-gray-50 dark:bg-carddark max-w-5xl reveal">
+            <h3 class="text-xl font-bold mb-3">Mau lihat kode dan demonya?</h3>
+            <p class="text-gray-600 dark:text-textmuted leading-relaxed mb-6 max-w-2xl">
+                Setiap halaman studi kasus di atas sudah memuat tautan ke repositori GitHub dan versi demo yang bisa dicoba langsung. Kalau belum ada, kirim email saja &mdash; saya senang menjelaskan prosesnya.
+            </p>
+            <a href="mailto:zaidanf504@gmail.com" class="fx-magnetic inline-flex items-center gap-2 px-6 py-3 rounded-full bg-black text-white dark:bg-white dark:text-black font-semibold hover:bg-gray-800 dark:hover:bg-gray-200 transition-all text-sm">
+                Tanya lewat email <i class='bx bx-right-arrow-alt text-lg'></i>
+            </a>
+        </div>
+    </main>
+
+    <footer class="border-t border-gray-200 dark:border-borderdark bg-grid relative pt-20 pb-10 transition-colors duration-300">
+        <button id="backToTop" aria-label="Kembali ke atas halaman" class="absolute -top-6 left-1/2 -translate-x-1/2 flex items-center gap-2 px-6 py-3 rounded-full bg-white dark:bg-carddark border border-gray-300 dark:border-borderdark text-sm font-bold text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black shadow-md transition-all">
+            <i class='bx bx-chevron-up text-lg'></i> Kembali ke atas
+        </button>
+
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-6 mt-8">
+            <div class="md:col-span-6 space-y-4">
+                <h3 class="text-2xl font-bold">Zaidan Faiz<span class="text-gray-400 dark:text-textmuted">.</span></h3>
+                <p class="text-gray-600 dark:text-textmuted font-bold">Pengembang Web Frontend &amp; UI/UX</p>
+                <div class="pt-6 text-sm text-gray-500 dark:text-textmuted font-medium">
+                    <p>Kota Pasuruan, Indonesia</p>
+                    <p class="mt-1">&copy; <span id="year"></span> Muhamad Zaidan Faiz.</p>
+                </div>
+            </div>
+
+            <div class="md:col-span-3">
+                <h4 class="text-xs font-bold tracking-widest text-black dark:text-white uppercase mb-6">Mengeksplorasi</h4>
+                <ul class="space-y-4 text-gray-500 dark:text-textmuted font-semibold text-sm">
+                    <li><a href="index.html" class="hover:text-black dark:hover:text-white transition-colors">Rumah</a></li>
+                    <li><a href="projects.html" class="hover:text-black dark:hover:text-white transition-colors">Proyek</a></li>
+                    <li><a href="about.html" class="hover:text-black dark:hover:text-white transition-colors">Tentang Saya</a></li>
+                </ul>
+            </div>
+
+            <div class="md:col-span-3">
+                <h4 class="text-xs font-bold tracking-widest text-black dark:text-white uppercase mb-6">Menghubungkan</h4>
+                <ul class="space-y-4 text-gray-500 dark:text-textmuted font-semibold text-sm">
+                    <li><a href="https://www.instagram.com/jidan_corei5/" target="_blank" rel="noopener" class="hover:text-black dark:hover:text-white transition-colors flex items-center gap-2"><i class='bx bxl-instagram text-lg'></i> Instagram</a></li>
+                    <li><a href="https://github.com/zaidanf504-commits" target="_blank" rel="noopener" class="hover:text-black dark:hover:text-white transition-colors flex items-center gap-2"><i class='bx bxl-github text-lg'></i> GitHub</a></li>
+                    <li><a href="mailto:zaidanf504@gmail.com" class="hover:text-black dark:hover:text-white transition-colors flex items-center gap-2"><i class='bx bx-envelope text-lg'></i> E-mail</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/animations.js"></script>
+</body>
+</html>
