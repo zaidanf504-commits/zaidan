@@ -1,45 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Peta situs untuk mesin pencari.
-
-  GANTI semua https://example.com dengan alamat situsmu setelah di-onlinekan,
-  dan sesuaikan tanggal <lastmod> setiap kali halaman itu kamu ubah.
+  Sitemap untuk portofolio Zaidan Faiz.
+  Domain: https://zaidan-nine.vercel.app
+  
+  File ini memberi tahu Google halaman apa saja yang ada di website.
+  Update <lastmod> setiap kali kamu mengubah halaman terkait.
 -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
+  <!-- ==================== HALAMAN UTAMA ==================== -->
+
   <url>
-    <loc>https://example.com/index.html</loc>
-    <lastmod>2026-09-17</lastmod>
-    <changefreq>monthly</changefreq>
+    <loc>https://zaidan-nine.vercel.app/</loc>
+    <lastmod>2026-09-29</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
 
   <url>
-    <loc>https://example.com/projects.html</loc>
-    <lastmod>2026-09-17</lastmod>
-    <changefreq>monthly</changefreq>
+    <loc>https://zaidan-nine.vercel.app/projects.html</loc>
+    <lastmod>2026-09-29</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <url>
-    <loc>https://example.com/about.html</loc>
-    <lastmod>2026-09-17</lastmod>
+    <loc>https://zaidan-nine.vercel.app/about.html</loc>
+    <lastmod>2026-09-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
+  <!-- ==================== STUDI KASUS PROYEK ==================== -->
+
   <url>
-    <loc>https://example.com/projects/ecommerce.html</loc>
-    <lastmod>2026-09-17</lastmod>
+    <loc>https://zaidan-nine.vercel.app/projects/ecommerce.html</loc>
+    <lastmod>2026-09-29</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://example.com/projects/jurnal-pkl.html</loc>
-    <lastmod>2026-09-17</lastmod>
+    <loc>https://zaidan-nine.vercel.app/projects/jurnal-pkl.html</loc>
+    <lastmod>2026-09-29</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.7</priority>
   </url>
+
+  <!-- ==================== CATATAN ====================
+
+  1. Halaman admin.html SENGAJA TIDAK dimasukkan ke sitemap
+     karena itu halaman privat (noindex, nofollow).
+
+  2. Halaman 404.html juga TIDAK dimasukkan karena
+     tidak boleh di-index oleh Google.
+
+  3. Setiap kali update halaman, ubah <lastmod> jadi tanggal update.
+
+  4. Kalau tambah halaman baru (misal blog.html),
+     tambahkan <url> baru di sini.
+
+  ==================================================== -->
 
 </urlset>
