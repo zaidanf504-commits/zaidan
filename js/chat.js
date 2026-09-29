@@ -1,10 +1,11 @@
 /* ==========================================================================
-   WIDGET LIVE CHAT — ZAIDAN (v2.1)
+   WIDGET LIVE CHAT — ZAIDAN (v2.2)
    --------------------------------------------------------------------------
-   Perubahan:
-   - Tunggu ChatCore siap (fix race condition)
-   - Error handling dengan toast yang kelihatan user
-   - Log lebih jelas untuk debugging
+   Level 1 UX Upgrade:
+   - Auto-scroll pintar (tidak paksa scroll saat user baca history)
+   - Prevent double-send (disable button saat loading)
+   - Escape key untuk tutup panel
+   - Placeholder dinamis + Enter to send
    ========================================================================== */
 
 (function () {
@@ -25,7 +26,6 @@
             return;
         }
 
-        // Kalau ChatCore sudah di-set null (gagal), berhenti
         if (window.ChatCore === null) {
             console.warn('[ChatWidget] ⚠️ ChatCore gagal di-init. Widget tidak aktif.');
             return;
@@ -45,13 +45,13 @@
     // ============================================================
     let isOpen = false;
     let isReady = false;
+    let isSending = false; // ← untuk prevent double-send
     let ui = null;
 
     // ============================================================
     // BUILD UI
     // ============================================================
     function buildUI() {
-        // Cegah duplikat
         if (document.querySelector('.zchat-bubble')) {
             return {
                 bubble: document.querySelector('.zchat-bubble'),
@@ -59,7 +59,6 @@
             };
         }
 
-        // Bubble
         const bubble = document.createElement('button');
         bubble.className = 'zchat-bubble';
         bubble.setAttribute('aria-label', 'Buka live chat');
@@ -67,7 +66,6 @@
         bubble.innerHTML = '<i class="bx bx-message-rounded-dots"></i>';
         document.body.appendChild(bubble);
 
-        // Panel
         const panel = document.createElement('div');
         panel.className = 'zchat-panel';
         panel.setAttribute('role', 'dialog');
@@ -101,7 +99,7 @@
             <div class="zchat-typing" id="zchat-typing"></div>
 
             <form class="zchat-form" id="zchat-form">
-                <input type="text" id="zchat-input" placeholder="Ketik pesan..." maxlength="2000" autocomplete="off">
+                <input type="text" id="zchat-input" placeholder="Tulis pesan... (Enter untuk kirim)" maxlength="2000" autocomplete="off">
                 <button type="submit" class="zchat-send" id="zchat-send" aria-label="Kirim pesan">
                     <i class="bx bx-send"></i>
                 </button>
@@ -115,7 +113,7 @@
     }
 
     // ============================================================
-    // TOAST (feedback ke user)
+    // TOAST
     // ============================================================
     function showToast(message) {
         const toast = document.getElementById('zchat-toast');
@@ -232,7 +230,7 @@
             const container = document.getElementById('zchat-messages');
             container.innerHTML = '';
             messages.forEach(msg => appendMessage(msg, false));
-            scrollToBottom();
+            scrollToBottom(true); // Paksa scroll saat load awal
         } catch (err) {
             console.error('[ChatWidget] Load error:', err);
             showToast('Gagal memuat pesan');
@@ -254,9 +252,20 @@
         container.appendChild(div);
     }
 
-    function scrollToBottom() {
+    // ============================================================
+    // SCROLL PINTAR
+    // ============================================================
+    function scrollToBottom(force = false) {
         const container = document.getElementById('zchat-messages');
-        container.scrollTop = container.scrollHeight;
+        if (!container) return;
+
+        // Kalau user sedang scroll ke atas (baca history), jangan paksa
+        // scroll ke bawah. Kecuali `force = true`.
+        const nearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 120;
+
+        if (force || nearBottom) {
+            container.scrollTop = container.scrollHeight;
+        }
     }
 
     // ============================================================
@@ -267,8 +276,23 @@
         const input = document.getElementById('zchat-input');
         const sendBtn = document.getElementById('zchat-send');
 
+        // Enter to send (Shift+Enter = baris baru, tapi widget pakai <input>
+        // jadi baris baru tidak berlaku — cukup Enter untuk kirim)
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (input.value.trim() && !isSending) {
+                    form.dispatchEvent(new Event('submit'));
+                }
+            }
+        });
+
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
+
+            // Prevent double-send
+            if (isSending) return;
+
             const text = input.value.trim();
             if (!text) return;
 
@@ -277,17 +301,18 @@
                 return;
             }
 
+            isSending = true;
             input.value = '';
             sendBtn.disabled = true;
+            sendBtn.innerHTML = '<i class="bx bx-loader-circle bx-spin"></i>';
 
             try {
                 await Core.sendMessage(text);
-                // Pesan akan muncul otomatis lewat realtime
+                scrollToBottom(true); // Paksa scroll setelah kirim
             } catch (err) {
                 console.error('[ChatWidget] ❌ Send error:', err);
-                input.value = text; // Kembalikan teks
+                input.value = text;
 
-                // Tampilkan error ke user
                 let errMsg = 'Gagal mengirim. Coba lagi.';
                 if (err.message) {
                     if (err.message.includes('row-level security')) {
@@ -299,7 +324,9 @@
                 showToast(errMsg);
             }
 
+            isSending = false;
             sendBtn.disabled = false;
+            sendBtn.innerHTML = '<i class="bx bx-send"></i>';
             input.focus();
         });
     }
@@ -310,7 +337,10 @@
     function setupRealtime() {
         Core.on('message:new', (msg) => {
             appendMessage(msg, true);
-            scrollToBottom();
+
+            // Kalau pesan dari user sendiri → paksa scroll.
+            // Kalau dari admin → scroll hanya kalau user sudah di bawah.
+            scrollToBottom(msg.sender === 'visitor');
 
             if (!isOpen && msg.sender === 'admin') {
                 showUnreadBadge();
@@ -355,7 +385,7 @@
     }
 
     // ============================================================
-    // BOOT — dipanggil setelah ChatCore siap
+    // BOOT
     // ============================================================
     function boot() {
         ui = buildUI();
@@ -366,13 +396,19 @@
 
         document.getElementById('zchat-close').addEventListener('click', closeChat);
 
+        // Escape untuk tutup panel
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && isOpen) {
+                closeChat();
+            }
+        });
+
         setupNameForm();
         setupSendForm();
         setupRealtime();
 
         initWidget();
 
-        // Expose untuk debugging
         window.ZChat = {
             open: openChat,
             close: closeChat,
@@ -385,7 +421,6 @@
         console.log('[ChatWidget] ✅ Widget siap');
     }
 
-    // Mulai tunggu ChatCore
     waitForCore();
 
 })();
