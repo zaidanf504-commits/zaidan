@@ -3,6 +3,10 @@
    --------------------------------------------------------------------------
    Chat 2 arah antara visitor dan admin. Desain mengikuti tema situs
    (terang/gelap) supaya terasa menyatu.
+
+   Level 1 UX Upgrade:
+   - Panel height responsif (tidak kepotong di layar pendek)
+   - Media query untuk layar pendek (laptop kecil, HP landscape)
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -91,8 +95,8 @@
     right: 24px;
     width: 380px;
     max-width: calc(100vw - 32px);
-    height: 560px;
-    max-height: calc(100vh - 140px);
+    height: min(560px, calc(100dvh - 140px));
+    max-height: calc(100dvh - 140px);
     background: #ffffff;
     border-radius: 20px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
@@ -475,7 +479,9 @@
         left: 0;
         width: 100%;
         height: 100vh;
+        height: 100dvh;
         max-height: 100vh;
+        max-height: 100dvh;
         border-radius: 20px 20px 0 0;
     }
 
@@ -484,6 +490,17 @@
         right: 16px;
         width: 56px;
         height: 56px;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   8b. Layar PENDEK (laptop kecil, HP landscape)
+   -------------------------------------------------------------------------- */
+@media (max-height: 700px) and (min-width: 481px) {
+    .zchat-panel {
+        bottom: 90px;
+        height: calc(100vh - 120px);
+        max-height: calc(100vh - 120px);
     }
 }
 
@@ -498,4 +515,66 @@
         animation-duration: 0.001s !important;
         transition-duration: 0.001s !important;
     }
+}
+
+/* ==========================================================================
+   TOMBOL EXPAND — Buka di halaman penuh
+   ========================================================================== */
+.zchat-expand {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: transparent;
+    border: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: all 0.2s;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+
+.zchat-expand:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.15);
+    transform: scale(1.08);
+}
+
+.dark .zchat-expand:hover {
+    background: rgba(0, 0, 0, 0.15);
+}
+
+/* ==========================================================================
+   TOAST — feedback untuk user
+   ========================================================================== */
+.zchat-toast {
+    position: absolute;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #ef4444;
+    color: #ffffff;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 100;
+    max-width: calc(100% - 40px);
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.zchat-toast.is-visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
 }
