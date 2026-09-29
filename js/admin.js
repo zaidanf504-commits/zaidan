@@ -29,8 +29,20 @@
         return;
     }
 
-    const { url, anonKey } = window.SUPABASE_CONFIG;
-    const sb = window.supabase.createClient(url, anonKey);
+       const { url, anonKey } = window.SUPABASE_CONFIG;
+
+    // ============================================================
+    // Admin pakai storageKey terpisah — supaya session admin TIDAK
+    // bocor ke chat visitor, dan sebaliknya.
+    // ============================================================
+    const sb = window.supabase.createClient(url, anonKey, {
+        auth: {
+            storageKey: 'zadmin-auth',
+            persistSession: true,
+            autoRefreshToken: true,
+            detectSessionInUrl: false
+        }
+    });
 
     // ============================================================
     // 2. STATE
