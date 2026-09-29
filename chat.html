@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="id" class="no-js">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+    <title>Live Chat | Zaidan Faiz</title>
+    <meta name="description" content="Live chat dengan Muhamad Zaidan Faiz — frontend developer dari Pasuruan. Tanya soal proyek, kolaborasi, atau konsultasi web.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://zaidan-nine.vercel.app/chat.html">
+
+    <meta name="theme-color" content="#0e0e0e" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Zaidan Faiz">
+    <meta property="og:locale" content="id_ID">
+    <meta property="og:title" content="Live Chat | Zaidan Faiz">
+    <meta property="og:description" content="Tanya apa saja soal web development — saya balas langsung.">
+    <meta property="og:url" content="https://zaidan-nine.vercel.app/chat.html">
+
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="alternate icon" href="favicon-32.png" sizes="32x32">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+    <!-- Set tema sebelum render (hindari kedipan) -->
+    <script>
+        (function () {
+            var root = document.documentElement;
+            root.classList.remove('no-js');
+            root.classList.add('js-enabled');
+            var stored = null;
+            try { stored = localStorage.getItem('theme'); } catch (e) {}
+            var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (stored === 'dark' || (!stored && prefersDark)) root.classList.add('dark');
+        })();
+    </script>
+
+    <style>
+        html { background: #ffffff; }
+        html.dark { background: #0e0e0e; }
+    </style>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <link rel="stylesheet" href="css/tailwind.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/chat-page.css">
+</head>
+<body>
+
+    <!-- ============================================================
+         HEADER — sticky di atas
+         ============================================================ -->
+    <header class="chat-header">
+        <div class="chat-header__inner">
+
+            <!-- Tombol back -->
+            <a href="index.html" class="chat-back" aria-label="Kembali ke beranda">
+                <i class='bx bx-left-arrow-alt'></i>
+                <span class="chat-back__label">Kembali</span>
+            </a>
+
+            <!-- Info Zaidan -->
+            <div class="chat-header__info">
+                <div class="chat-header__avatar">
+                    Z
+                    <span class="chat-header__status-dot"></span>
+                </div>
+                <div class="chat-header__text">
+                    <h1 class="chat-header__name">Zaidan Faiz</h1>
+                    <p class="chat-header__status">
+                        <span id="headerStatus">Menghubungkan...</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Tombol aksi -->
+            <div class="chat-header__actions">
+                <button id="themeToggle" class="chat-icon-btn" aria-label="Ganti tema">
+                    <i class='bx bx-moon dark:hidden'></i>
+                    <i class='bx bx-sun hidden dark:block'></i>
+                </button>
+                <button id="soundToggle" class="chat-icon-btn" aria-label="Suara notifikasi">
+                    <i class='bx bx-volume-full'></i>
+                </button>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- ============================================================
+         MAIN — area chat
+         ============================================================ -->
+    <main class="chat-main">
+
+        <!-- ---------- LAYAR 1: Form perkenalan ---------- -->
+        <div id="introScreen" class="chat-intro-screen">
+            <div class="chat-intro-card">
+
+                <div class="chat-intro-card__avatar">
+                    <i class='bx bx-message-rounded-dots'></i>
+                </div>
+
+                <h2 class="chat-intro-card__title">
+                    Halo! 👋
+                </h2>
+
+                <p class="chat-intro-card__subtitle">
+                    Saya <strong>Zaidan</strong>, frontend developer dari Pasuruan.
+                    Ada yang bisa saya bantu?
+                </p>
+
+                <div class="chat-intro-card__meta">
+                    <div class="chat-intro-meta-item">
+                        <i class='bx bx-time-five'></i>
+                        <span>Biasanya balas dalam 1-2 jam</span>
+                    </div>
+                    <div class="chat-intro-meta-item">
+                        <i class='bx bx-shield-quarter'></i>
+                        <span>Percakapan bersifat privat</span>
+                    </div>
+                </div>
+
+                <form id="introForm" class="chat-intro-form">
+                    <label for="introName" class="chat-intro-form__label">
+                        Nama kamu
+                    </label>
+                    <input
+                        type="text"
+                        id="introName"
+                        class="chat-intro-form__input"
+                        placeholder="Misal: Budi Santoso"
+                        maxlength="50"
+                        autocomplete="name"
+                        required
+                    >
+                    <label for="introEmail" class="chat-intro-form__label">
+                        Email <span class="chat-intro-form__optional">(opsional — biar saya bisa hubungi kalau perlu)</span>
+                    </label>
+                    <input
+                        type="email"
+                        id="introEmail"
+                        class="chat-intro-form__input"
+                        placeholder="budi@email.com"
+                        maxlength="100"
+                        autocomplete="email"
+                    >
+                    <button type="submit" id="introSubmit" class="chat-intro-form__submit" disabled>
+                        Mulai Chat
+                        <i class='bx bx-right-arrow-alt'></i>
+                    </button>
+                </form>
+
+                <p class="chat-intro-card__footer">
+                    Dengan memulai chat, kamu setuju percakapan ini disimpan
+                    untuk keperluan follow-up.
+                </p>
+
+            </div>
+        </div>
+
+        <!-- ---------- LAYAR 2: Percakapan ---------- -->
+        <div id="chatScreen" class="chat-screen">
+
+            <!-- Area pesan -->
+            <div id="messagesArea" class="chat-messages-area">
+                <!-- Pesan akan di-render di sini -->
+            </div>
+
+            <!-- Typing indicator -->
+            <div id="typingIndicator" class="chat-typing" aria-live="polite"></div>
+
+            <!-- Quick replies (muncul kalau belum ada chat dari user) -->
+            <div id="quickReplies" class="chat-quick-replies">
+                <button class="chat-quick-reply" data-text="Halo Zaidan, saya tertarik kerja sama untuk bikin website.">
+                    👋 Kerja sama
+                </button>
+                <button class="chat-quick-reply" data-text="Boleh minta info harga untuk jasa pembuatan website?">
+                    💰 Tanya harga
+                </button>
+                <button class="chat-quick-reply" data-text="Saya mau lihat portofolio proyek kamu dulu.">
+                    🎨 Lihat portofolio
+                </button>
+                <button class="chat-quick-reply" data-text="Boleh minta tolong review website saya?">
+                    🔍 Review website
+                </button>
+            </div>
+
+            <!-- Input -->
+            <form id="chatForm" class="chat-input-form">
+                <div class="chat-input-wrapper">
+                    <textarea
+                        id="chatInput"
+                        class="chat-input"
+                        rows="1"
+                        placeholder="Ketik pesan..."
+                        maxlength="2000"
+                        autocomplete="off"
+                    ></textarea>
+                    <button
+                        type="button"
+                        id="emojiBtn"
+                        class="chat-emoji-btn"
+                        aria-label="Emoji"
+                    >
+                        <i class='bx bx-smile'></i>
+                    </button>
+                    <div id="emojiPicker" class="chat-emoji-picker">
+                        <button type="button" class="chat-emoji-option">😊</button>
+                        <button type="button" class="chat-emoji-option">😂</button>
+                        <button type="button" class="chat-emoji-option">🙏</button>
+                        <button type="button" class="chat-emoji-option">👍</button>
+                        <button type="button" class="chat-emoji-option">❤️</button>
+                        <button type="button" class="chat-emoji-option">🔥</button>
+                        <button type="button" class="chat-emoji-option">✨</button>
+                        <button type="button" class="chat-emoji-option">🎉</button>
+                        <button type="button" class="chat-emoji-option">👋</button>
+                        <button type="button" class="chat-emoji-option">💬</button>
+                        <button type="button" class="chat-emoji-option">✅</button>
+                        <button type="button" class="chat-emoji-option">💰</button>
+                    </div>
+                </div>
+                <button type="submit" id="chatSend" class="chat-send-btn" disabled aria-label="Kirim">
+                    <i class='bx bx-send'></i>
+                </button>
+            </form>
+
+        </div>
+
+    </main>
+
+    <!-- Toast -->
+    <div id="chatToast" class="chat-toast">
+        <i class='bx bx-check-circle'></i>
+        <span id="chatToastText"></span>
+    </div>
+
+    <!-- ============================================================
+         SCRIPTS
+         ============================================================ -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/chat-core.js"></script>
+    <script src="js/chat-page.js"></script>
+</body>
+</html>
