@@ -1,85 +1,65 @@
 /* ==========================================================================
-   WIDGET LIVE CHAT — ZAIDAN
+   WIDGET LIVE CHAT — ZAIDAN (v2.1)
    --------------------------------------------------------------------------
-   Chat 2 arah antara visitor (user web) dan admin (kamu).
-   Pesan disimpan di Supabase dan dikirim real-time via Realtime channel.
-
-   Tidak ada bot. Semua balasan datang dari kamu (admin).
+   Perubahan:
+   - Tunggu ChatCore siap (fix race condition)
+   - Error handling dengan toast yang kelihatan user
+   - Log lebih jelas untuk debugging
    ========================================================================== */
 
 (function () {
     'use strict';
 
     // ============================================================
-    // 1. CEK KONFIGURASI
+    // TUNGGU CHATCORE SIAP
     // ============================================================
-    if (!window.SUPABASE_CONFIG || !window.supabase) {
-        console.warn('[Chat] Supabase config tidak ditemukan. Widget chat tidak aktif.');
-        return;
+    let Core = null;
+    let initAttempts = 0;
+    const MAX_ATTEMPTS = 50; // 5 detik
+
+    function waitForCore() {
+        if (window.ChatCore) {
+            Core = window.ChatCore;
+            console.log('[ChatWidget] ✅ ChatCore siap, mulai widget');
+            boot();
+            return;
+        }
+
+        // Kalau ChatCore sudah di-set null (gagal), berhenti
+        if (window.ChatCore === null) {
+            console.warn('[ChatWidget] ⚠️ ChatCore gagal di-init. Widget tidak aktif.');
+            return;
+        }
+
+        initAttempts++;
+        if (initAttempts >= MAX_ATTEMPTS) {
+            console.warn('[ChatWidget] ⚠️ Timeout menunggu ChatCore. Widget tidak aktif.');
+            return;
+        }
+
+        setTimeout(waitForCore, 100);
     }
 
-    const { url, anonKey } = window.SUPABASE_CONFIG;
-    const sb = window.supabase.createClient(url, anonKey);
-
     // ============================================================
-    // 2. STATE
+    // STATE
     // ============================================================
-    const STORAGE_KEY = 'zchat_visitor';
-    let visitorId = null;
-    let visitorName = '';
-    let conversationId = null;
-    let channel = null;
     let isOpen = false;
     let isReady = false;
+    let ui = null;
 
     // ============================================================
-    // 3. HELPER
-    // ============================================================
-    function generateVisitorId() {
-        return 'v_' + Math.random().toString(36).substring(2, 10) + Date.now().toString(36);
-    }
-
-    function loadVisitor() {
-        try {
-            const raw = localStorage.getItem(STORAGE_KEY);
-            if (raw) {
-                const data = JSON.parse(raw);
-                visitorId = data.id;
-                visitorName = data.name || '';
-            }
-        } catch (e) { /* diabaikan */ }
-
-        if (!visitorId) {
-            visitorId = generateVisitorId();
-            saveVisitor();
-        }
-    }
-
-    function saveVisitor() {
-        try {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify({
-                id: visitorId,
-                name: visitorName
-            }));
-        } catch (e) { /* diabaikan */ }
-    }
-
-    function formatTime(iso) {
-        const d = new Date(iso);
-        return d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-    }
-
-    function escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
-
-    // ============================================================
-    // 4. BANGUN UI
+    // BUILD UI
     // ============================================================
     function buildUI() {
-        // Bubble button
+        // Cegah duplikat
+        if (document.querySelector('.zchat-bubble')) {
+            return {
+                bubble: document.querySelector('.zchat-bubble'),
+                panel: document.querySelector('.zchat-panel')
+            };
+        }
+
+        // Bubble
         const bubble = document.createElement('button');
         bubble.className = 'zchat-bubble';
         bubble.setAttribute('aria-label', 'Buka live chat');
@@ -102,41 +82,56 @@
                         <span>Biasanya balas dalam 1-2 jam</span>
                     </div>
                 </div>
+                <a href="chat.html" class="zchat-expand" title="Buka di halaman penuh" aria-label="Buka di halaman penuh">
+                    <i class='bx bx-expand-alt'></i>
+                </a>
                 <button class="zchat-close" id="zchat-close" aria-label="Tutup chat" type="button">
                     <i class="bx bx-x"></i>
                 </button>
             </div>
 
-            <!-- Form perkenalan -->
             <div class="zchat-intro" id="zchat-intro">
                 <p><strong>Halo! 👋</strong>Sebelum mulai, boleh tahu nama kamu?</p>
                 <input type="text" class="zchat-input" id="zchat-name-input" placeholder="Nama kamu" maxlength="50" autocomplete="name">
                 <button class="zchat-btn" id="zchat-start-btn" disabled type="button">Mulai Chat</button>
             </div>
 
-            <!-- Area pesan -->
             <div class="zchat-messages" id="zchat-messages"></div>
 
-            <!-- Typing indicator -->
             <div class="zchat-typing" id="zchat-typing"></div>
 
-            <!-- Form kirim -->
             <form class="zchat-form" id="zchat-form">
                 <input type="text" id="zchat-input" placeholder="Ketik pesan..." maxlength="2000" autocomplete="off">
                 <button type="submit" class="zchat-send" id="zchat-send" aria-label="Kirim pesan">
                     <i class="bx bx-send"></i>
                 </button>
             </form>
+
+            <div class="zchat-toast" id="zchat-toast"></div>
         `;
         document.body.appendChild(panel);
 
         return { bubble, panel };
     }
 
-    const ui = buildUI();
+    // ============================================================
+    // TOAST (feedback ke user)
+    // ============================================================
+    function showToast(message) {
+        const toast = document.getElementById('zchat-toast');
+        if (!toast) return;
+
+        toast.textContent = message;
+        toast.classList.add('is-visible');
+
+        clearTimeout(showToast._timer);
+        showToast._timer = setTimeout(() => {
+            toast.classList.remove('is-visible');
+        }, 3000);
+    }
 
     // ============================================================
-    // 5. BUKA / TUTUP
+    // OPEN / CLOSE
     // ============================================================
     function openChat() {
         isOpen = true;
@@ -146,18 +141,10 @@
         ui.bubble.setAttribute('aria-label', 'Tutup live chat');
 
         clearUnreadBadge();
+        if (isReady) Core.markAsRead();
 
-        // Reset unread_by_visitor
-        if (conversationId) {
-            sb.from('conversations')
-                .update({ unread_by_visitor: 0 })
-                .eq('id', conversationId)
-                .then(() => {});
-        }
-
-        // Fokus ke input yang sesuai
         setTimeout(() => {
-            if (visitorName) {
+            if (Core.hasIdentity()) {
                 const input = document.getElementById('zchat-input');
                 if (input) input.focus();
             } else {
@@ -175,125 +162,81 @@
         ui.bubble.setAttribute('aria-label', 'Buka live chat');
     }
 
-    ui.bubble.addEventListener('click', () => {
-        if (isOpen) closeChat();
-        else openChat();
-    });
-
-    document.getElementById('zchat-close').addEventListener('click', closeChat);
-
     // ============================================================
-    // 6. INISIALISASI PERCAKAPAN
+    // INITIALIZATION
     // ============================================================
-    async function initConversation() {
-        if (!visitorName) {
-            // Belum ada nama → tampilkan form perkenalan
+    async function initWidget() {
+        if (!Core.hasIdentity()) {
             document.getElementById('zchat-intro').classList.add('is-visible');
-            document.getElementById('zchat-messages').classList.remove('is-visible');
-            document.getElementById('zchat-form').classList.remove('is-visible');
             return;
         }
 
-        // Sudah ada nama → tampilkan chat
         document.getElementById('zchat-intro').classList.remove('is-visible');
         document.getElementById('zchat-messages').classList.add('is-visible');
         document.getElementById('zchat-form').classList.add('is-visible');
 
-        // Cek percakapan yang sudah ada
-        const { data: existing, error: fetchErr } = await sb
-            .from('conversations')
-            .select('id')
-            .eq('visitor_id', visitorId)
-            .maybeSingle();
-
-        if (fetchErr) {
-            console.error('[Chat] Gagal cek percakapan:', fetchErr);
-            return;
+        try {
+            await Core.setup();
+            isReady = true;
+            await loadMessages();
+            Core.subscribeRealtime();
+        } catch (err) {
+            console.error('[ChatWidget] ❌ Init error:', err);
+            showToast('Gagal memuat chat. Coba refresh halaman.');
         }
-
-        if (existing) {
-            conversationId = existing.id;
-        } else {
-            // Buat percakapan baru
-            const { data: created, error: createErr } = await sb
-                .from('conversations')
-                .insert({
-                    visitor_id: visitorId,
-                    visitor_name: visitorName,
-                    last_message_at: new Date().toISOString()
-                })
-                .select('id')
-                .single();
-
-            if (createErr) {
-                console.error('[Chat] Gagal buat percakapan:', createErr);
-                return;
-            }
-            conversationId = created.id;
-
-            // Pesan sambutan otomatis (template, bukan bot)
-            await sb.from('messages').insert({
-                conversation_id: conversationId,
-                sender: 'admin',
-                content: `Hai ${visitorName}! 👋 Terima kasih sudah mampir. Ada yang bisa saya bantu?`
-            });
-        }
-
-        isReady = true;
-        await loadMessages();
-        subscribeRealtime();
     }
 
     // ============================================================
-    // 7. HANDLE FORM NAMA
+    // NAME FORM
     // ============================================================
-    const nameInput = document.getElementById('zchat-name-input');
-    const startBtn = document.getElementById('zchat-start-btn');
+    function setupNameForm() {
+        const nameInput = document.getElementById('zchat-name-input');
+        const startBtn = document.getElementById('zchat-start-btn');
 
-    nameInput.addEventListener('input', () => {
-        startBtn.disabled = nameInput.value.trim().length < 2;
-    });
+        nameInput.addEventListener('input', () => {
+            startBtn.disabled = nameInput.value.trim().length < 2;
+        });
 
-    startBtn.addEventListener('click', async () => {
-        const name = nameInput.value.trim();
-        if (name.length < 2) return;
+        startBtn.addEventListener('click', async () => {
+            const name = nameInput.value.trim();
+            if (name.length < 2) return;
 
-        visitorName = name;
-        saveVisitor();
-        startBtn.textContent = 'Memuat...';
-        startBtn.disabled = true;
+            Core.setIdentity(name, '');
+            startBtn.textContent = 'Memuat...';
+            startBtn.disabled = true;
 
-        await initConversation();
-    });
+            try {
+                await initWidget();
+            } catch (err) {
+                console.error('[ChatWidget] Setup error:', err);
+                startBtn.textContent = 'Mulai Chat';
+                startBtn.disabled = false;
+                showToast('Gagal memulai chat. Coba lagi.');
+            }
+        });
 
-    nameInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && !startBtn.disabled) {
-            e.preventDefault();
-            startBtn.click();
-        }
-    });
+        nameInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !startBtn.disabled) {
+                e.preventDefault();
+                startBtn.click();
+            }
+        });
+    }
 
     // ============================================================
-    // 8. LOAD PESAN
+    // LOAD MESSAGES
     // ============================================================
     async function loadMessages() {
-        if (!conversationId) return;
-
-        const { data, error } = await sb
-            .from('messages')
-            .select('id, sender, content, created_at')
-            .eq('conversation_id', conversationId)
-            .order('created_at', { ascending: true });
-
-        if (error) {
-            console.error('[Chat] Gagal load pesan:', error);
-            return;
+        try {
+            const messages = await Core.loadMessages();
+            const container = document.getElementById('zchat-messages');
+            container.innerHTML = '';
+            messages.forEach(msg => appendMessage(msg, false));
+            scrollToBottom();
+        } catch (err) {
+            console.error('[ChatWidget] Load error:', err);
+            showToast('Gagal memuat pesan');
         }
-
-        const container = document.getElementById('zchat-messages');
-        container.innerHTML = '';
-        (data || []).forEach(msg => appendMessage(msg, false));
-        scrollToBottom();
     }
 
     function appendMessage(msg, animate = true) {
@@ -317,77 +260,66 @@
     }
 
     // ============================================================
-    // 9. KIRIM PESAN
+    // SEND MESSAGE
     // ============================================================
-    const form = document.getElementById('zchat-form');
-    const input = document.getElementById('zchat-input');
-    const sendBtn = document.getElementById('zchat-send');
+    function setupSendForm() {
+        const form = document.getElementById('zchat-form');
+        const input = document.getElementById('zchat-input');
+        const sendBtn = document.getElementById('zchat-send');
 
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const text = input.value.trim();
+            if (!text) return;
 
-        const text = input.value.trim();
-        if (!text || !conversationId) return;
+            if (!isReady) {
+                showToast('Chat belum siap. Tunggu sebentar...');
+                return;
+            }
 
-        input.value = '';
-        sendBtn.disabled = true;
+            input.value = '';
+            sendBtn.disabled = true;
 
-        const { error } = await sb.from('messages').insert({
-            conversation_id: conversationId,
-            sender: 'visitor',
-            content: text
-        });
+            try {
+                await Core.sendMessage(text);
+                // Pesan akan muncul otomatis lewat realtime
+            } catch (err) {
+                console.error('[ChatWidget] ❌ Send error:', err);
+                input.value = text; // Kembalikan teks
 
-        if (error) {
-            console.error('[Chat] Gagal kirim pesan:', error);
-            input.value = text;
-        } else {
-            // Update last_message_at + increment unread_by_admin
-            const { data: conv } = await sb
-                .from('conversations')
-                .select('unread_by_admin')
-                .eq('id', conversationId)
-                .single();
-
-            await sb.from('conversations')
-                .update({
-                    last_message_at: new Date().toISOString(),
-                    unread_by_admin: (conv?.unread_by_admin || 0) + 1
-                })
-                .eq('id', conversationId);
-        }
-
-        sendBtn.disabled = false;
-        input.focus();
-    });
-
-    // ============================================================
-    // 10. REALTIME
-    // ============================================================
-    function subscribeRealtime() {
-        if (channel) sb.removeChannel(channel);
-
-        channel = sb.channel('chat_' + conversationId)
-            .on('postgres_changes', {
-                event: 'INSERT',
-                schema: 'public',
-                table: 'messages',
-                filter: `conversation_id=eq.${conversationId}`
-            }, (payload) => {
-                const msg = payload.new;
-                appendMessage(msg);
-                scrollToBottom();
-
-                // Kalau chat tertutup dan pesan dari admin, tampilkan badge unread
-                if (!isOpen && msg.sender === 'admin') {
-                    showUnreadBadge();
+                // Tampilkan error ke user
+                let errMsg = 'Gagal mengirim. Coba lagi.';
+                if (err.message) {
+                    if (err.message.includes('row-level security')) {
+                        errMsg = 'Error: Izin database. Hubungi admin.';
+                    } else if (err.message.includes('Failed to fetch')) {
+                        errMsg = 'Error: Koneksi internet bermasalah.';
+                    }
                 }
-            })
-            .subscribe();
+                showToast(errMsg);
+            }
+
+            sendBtn.disabled = false;
+            input.focus();
+        });
     }
 
     // ============================================================
-    // 11. BADGE UNREAD
+    // REALTIME
+    // ============================================================
+    function setupRealtime() {
+        Core.on('message:new', (msg) => {
+            appendMessage(msg, true);
+            scrollToBottom();
+
+            if (!isOpen && msg.sender === 'admin') {
+                showUnreadBadge();
+            }
+        });
+    }
+
+    // ============================================================
+    // BADGE
     // ============================================================
     function showUnreadBadge() {
         let badge = ui.bubble.querySelector('.zchat-badge');
@@ -407,26 +339,53 @@
     }
 
     // ============================================================
-    // 12. BOOT
+    // HELPERS
     // ============================================================
-    loadVisitor();
-
-    if (visitorName) {
-        // Sudah pernah chat → siapkan percakapan
-        initConversation();
-    } else {
-        // Pertama kali → tampilkan form perkenalan saat bubble dibuka
-        document.getElementById('zchat-intro').classList.add('is-visible');
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text == null ? '' : text;
+        return div.innerHTML;
     }
 
-    // Expose untuk debugging
-    window.ZChat = {
-        open: openChat,
-        close: closeChat,
-        reset: () => {
-            try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
-            location.reload();
-        }
-    };
+    function formatTime(iso) {
+        return new Date(iso).toLocaleTimeString('id-ID', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
+
+    // ============================================================
+    // BOOT — dipanggil setelah ChatCore siap
+    // ============================================================
+    function boot() {
+        ui = buildUI();
+
+        ui.bubble.addEventListener('click', () => {
+            isOpen ? closeChat() : openChat();
+        });
+
+        document.getElementById('zchat-close').addEventListener('click', closeChat);
+
+        setupNameForm();
+        setupSendForm();
+        setupRealtime();
+
+        initWidget();
+
+        // Expose untuk debugging
+        window.ZChat = {
+            open: openChat,
+            close: closeChat,
+            reset: () => {
+                Core.resetVisitor();
+                location.reload();
+            }
+        };
+
+        console.log('[ChatWidget] ✅ Widget siap');
+    }
+
+    // Mulai tunggu ChatCore
+    waitForCore();
 
 })();
