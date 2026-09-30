@@ -3,6 +3,11 @@
    --------------------------------------------------------------------------
    Layout: header sticky + main (chat) + footer input
    Mobile-first, responsive sampai desktop.
+
+   Fix Bubble Size (v3):
+   - Bubble auto-size sesuai isi pesan (fit-content)
+   - Bubble tidak lagi melebar mengikuti parent
+   - Margin auto untuk dorong bubble ke kanan/kiri
    ========================================================================== */
 
 :root {
@@ -50,7 +55,6 @@ body {
     background: var(--cp-bg);
     color: var(--cp-text);
     overflow: hidden;
-    /* Cegah iOS bounce scroll di body */
     overscroll-behavior: none;
     -webkit-font-smoothing: antialiased;
 }
@@ -463,9 +467,10 @@ body {
     padding: 20px 16px 12px;
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 4px;
     -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
+    align-items: flex-start;
 }
 
 @media (min-width: 768px) {
@@ -485,6 +490,8 @@ body {
     color: var(--cp-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.08em;
+    align-self: stretch;
+    width: 100%;
 }
 
 .cp-date-divider::before,
@@ -495,18 +502,26 @@ body {
     background: var(--cp-border);
 }
 
-/* Message row */
+/* ==========================================================================
+   MESSAGE ROW — auto-size sesuai isi
+   --------------------------------------------------------------------------
+   Kunci fix:
+   - `width: fit-content` bikin row hanya selebar isinya
+   - `margin-left/right: auto` dorong row ke kanan/kiri
+   - `max-width` batasi row di ukuran maksimum
+   ========================================================================== */
 .cp-msg {
     display: flex;
     gap: 8px;
     align-items: flex-end;
-    max-width: 82%;
+    max-width: 75%;
+    width: fit-content;
     animation: cp-msg-in 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @media (min-width: 768px) {
     .cp-msg {
-        max-width: 68%;
+        max-width: 60%;
     }
 }
 
@@ -521,13 +536,17 @@ body {
     }
 }
 
+/* Row visitor — dorong ke kanan */
 .cp-msg.is-visitor {
     align-self: flex-end;
     flex-direction: row-reverse;
+    margin-left: auto;
 }
 
+/* Row admin — dorong ke kiri */
 .cp-msg.is-admin {
     align-self: flex-start;
+    margin-right: auto;
 }
 
 .cp-msg__avatar {
@@ -557,14 +576,21 @@ body {
     color: #0e0e0e;
 }
 
+/* ==========================================================================
+   BUBBLE — auto-size sesuai isi
+   ========================================================================== */
 .cp-msg__bubble {
     padding: 10px 14px;
     border-radius: 18px;
     font-size: 14.5px;
     line-height: 1.5;
     word-wrap: break-word;
+    overflow-wrap: break-word;
     white-space: pre-wrap;
     position: relative;
+    display: inline-block;
+    width: fit-content;
+    max-width: 100%;
 }
 
 .cp-msg.is-admin .cp-msg__bubble {
@@ -836,6 +862,7 @@ body {
     color: var(--cp-text-muted);
     font-size: 13px;
     gap: 12px;
+    align-self: center;
 }
 
 .cp-loading i {
@@ -855,7 +882,6 @@ body {
     }
 }
 
-/* Focus visible */
 *:focus-visible {
     outline: 2px solid var(--cp-accent);
     outline-offset: 2px;
@@ -863,7 +889,7 @@ body {
 }
 
 /* ==========================================================================
-   DESKTOP ENHANCEMENTS (lebar layar besar)
+   DESKTOP ENHANCEMENTS
    ========================================================================== */
 @media (min-width: 1024px) {
     .chat-header__inner {
