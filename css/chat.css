@@ -7,6 +7,11 @@
    Level 1 UX Upgrade:
    - Panel height responsif (tidak kepotong di layar pendek)
    - Media query untuk layar pendek (laptop kecil, HP landscape)
+
+   Fix Bubble Size (v3):
+   - Bubble auto-size sesuai isi pesan (fit-content)
+   - Bubble tidak lagi melebar mengikuti parent
+   - Margin auto untuk dorong bubble ke kanan/kiri
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -44,13 +49,13 @@
 .zchat-bubble:hover {
     transform: scale(1.08);
     box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
-    background: #8B5CF6;
+    background: #262626;
     color: #ffffff;
 }
 
 .dark .zchat-bubble:hover {
-    background: #8B5CF6;
-    color: #ffffff;
+    background: #e5e7eb;
+    color: #0e0e0e;
 }
 
 .zchat-bubble.is-open {
@@ -145,7 +150,8 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #8B5CF6, #EC4899);
+    background: #0e0e0e;
+    border: 2px solid #10b981;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -153,6 +159,11 @@
     font-size: 16px;
     color: #ffffff;
     flex-shrink: 0;
+}
+
+.dark .zchat-avatar {
+    background: #ffffff;
+    color: #0e0e0e;
 }
 
 .zchat-header-info {
@@ -272,7 +283,7 @@
 }
 
 .zchat-input:focus {
-    border-color: #8B5CF6;
+    border-color: #10b981;
 }
 
 .zchat-btn {
@@ -294,8 +305,13 @@
 }
 
 .zchat-btn:hover:not(:disabled) {
-    background: #8B5CF6;
+    background: #262626;
     color: #ffffff;
+}
+
+.dark .zchat-btn:hover:not(:disabled) {
+    background: #e5e7eb;
+    color: #0e0e0e;
 }
 
 .zchat-btn:disabled {
@@ -312,8 +328,9 @@
     padding: 20px;
     display: none;
     flex-direction: column;
-    gap: 10px;
+    gap: 4px;
     background: #f9fafb;
+    align-items: flex-start;
 }
 
 .zchat-messages.is-visible {
@@ -324,16 +341,27 @@
     background: #0e0e0e;
 }
 
+/* ==========================================================================
+   BUBBLE CHAT — auto-size sesuai isi pesan
+   --------------------------------------------------------------------------
+   Kunci fix:
+   - `width: fit-content` bikin bubble hanya selebar isinya
+   - `max-width` batasi bubble di ukuran maksimum
+   - `margin-left/right: auto` dorong bubble ke kanan/kiri
+   ========================================================================== */
 .zchat-msg {
+    width: fit-content;
     max-width: 78%;
     padding: 10px 14px;
     border-radius: 16px;
     font-size: 14px;
     line-height: 1.5;
     word-wrap: break-word;
+    overflow-wrap: break-word;
     animation: zchat-pop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     position: relative;
     white-space: pre-wrap;
+    display: inline-block;
 }
 
 @keyframes zchat-pop {
@@ -341,11 +369,13 @@
     to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+/* Bubble visitor (kanan) */
 .zchat-msg--visitor {
     align-self: flex-end;
     background: #0e0e0e;
     color: #ffffff;
     border-bottom-right-radius: 4px;
+    margin-left: auto;
 }
 
 .dark .zchat-msg--visitor {
@@ -353,12 +383,14 @@
     color: #0e0e0e;
 }
 
+/* Bubble admin (kiri) */
 .zchat-msg--admin {
     align-self: flex-start;
     background: #ffffff;
     color: #0e0e0e;
     border: 1px solid #e5e7eb;
     border-bottom-left-radius: 4px;
+    margin-right: auto;
 }
 
 .dark .zchat-msg--admin {
@@ -433,7 +465,7 @@
 }
 
 .zchat-form input:focus {
-    border-color: #8B5CF6;
+    border-color: #10b981;
 }
 
 .zchat-send {
@@ -459,8 +491,14 @@
 }
 
 .zchat-send:hover:not(:disabled) {
-    background: #8B5CF6;
+    background: #262626;
     color: #ffffff;
+    transform: scale(1.05);
+}
+
+.dark .zchat-send:hover:not(:disabled) {
+    background: #e5e7eb;
+    color: #0e0e0e;
     transform: scale(1.05);
 }
 
