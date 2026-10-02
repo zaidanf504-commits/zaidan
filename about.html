@@ -59,6 +59,289 @@
     <link rel="stylesheet" href="css/tailwind.css">
     <link rel="stylesheet" href="css/animations.css">
 
+    <!-- ============================================================
+         TIMELINE STYLES (custom, karena tidak ada di tailwind.css)
+         ============================================================ -->
+    <style>
+        /* Container timeline */
+        .timeline {
+            position: relative;
+            padding-left: 2.5rem;
+        }
+
+        /* Garis vertikal di kiri */
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0.75rem;
+            top: 0.5rem;
+            bottom: 0.5rem;
+            width: 2px;
+            background: linear-gradient(
+                to bottom,
+                rgba(0, 0, 0, 0.15) 0%,
+                rgba(0, 0, 0, 0.08) 50%,
+                rgba(0, 0, 0, 0.02) 100%
+            );
+            border-radius: 1px;
+        }
+
+        .dark .timeline::before {
+            background: linear-gradient(
+                to bottom,
+                rgba(255, 255, 255, 0.2) 0%,
+                rgba(255, 255, 255, 0.1) 50%,
+                rgba(255, 255, 255, 0.03) 100%
+            );
+        }
+
+        /* Timeline item */
+        .timeline-item {
+            position: relative;
+            padding-bottom: 2rem;
+        }
+
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+
+        /* Dot di timeline */
+        .timeline-dot {
+            position: absolute;
+            left: -2.5rem;
+            top: 0.5rem;
+            width: 1.75rem;
+            height: 1.75rem;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 2px solid #0e0e0e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .dark .timeline-dot {
+            background: #0e0e0e;
+            border-color: #ffffff;
+        }
+
+        .timeline-dot::after {
+            content: '';
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 50%;
+            background: #0e0e0e;
+            transition: all 0.3s ease;
+        }
+
+        .dark .timeline-dot::after {
+            background: #ffffff;
+        }
+
+        .timeline-item:hover .timeline-dot {
+            transform: scale(1.15);
+            box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.06);
+        }
+
+        .dark .timeline-item:hover .timeline-dot {
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.08);
+        }
+
+        /* Dot khusus untuk entry pendidikan aktif (emerald) */
+        .timeline-dot.is-active {
+            border-color: #10b981;
+        }
+
+        .timeline-dot.is-active::after {
+            background: #10b981;
+        }
+
+        .timeline-item:hover .timeline-dot.is-active {
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
+        }
+
+        /* Dot khusus untuk entry PKL (blue) */
+        .timeline-dot.is-pkl {
+            border-color: #3b82f6;
+        }
+
+        .timeline-dot.is-pkl::after {
+            background: #3b82f6;
+        }
+
+        .timeline-item:hover .timeline-dot.is-pkl {
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+        }
+
+        /* Card timeline */
+        .timeline-card {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dark .timeline-card {
+            background: #161616;
+            border-color: #262626;
+        }
+
+        /* Hover effect: card terangkat + border highlight */
+        .timeline-item:hover .timeline-card {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.15);
+            border-color: #0e0e0e;
+        }
+
+        .dark .timeline-item:hover .timeline-card {
+            box-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.6);
+            border-color: #ffffff;
+        }
+
+        /* Accent glow di pojok card */
+        .timeline-card::before {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -20%;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.08), transparent 70%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .timeline-item:hover .timeline-card::before {
+            opacity: 1;
+        }
+
+        /* Accent khusus untuk PKL */
+        .timeline-card.is-pkl::before {
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.08), transparent 70%);
+        }
+
+        /* Badge periode */
+        .timeline-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.6875rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+        }
+
+        .timeline-badge.badge-active {
+            background: #d1fae5;
+            color: #047857;
+        }
+
+        .dark .timeline-badge.badge-active {
+            background: rgba(6, 78, 59, 0.3);
+            color: #34d399;
+        }
+
+        .timeline-badge.badge-pkl {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .dark .timeline-badge.badge-pkl {
+            background: rgba(30, 58, 138, 0.3);
+            color: #60a5fa;
+        }
+
+        /* Skill chips */
+        .timeline-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.375rem;
+            margin-top: 1rem;
+        }
+
+        .timeline-chip {
+            padding: 0.25rem 0.625rem;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.375rem;
+            font-size: 0.6875rem;
+            font-weight: 700;
+            color: #4b5563;
+            transition: all 0.2s ease;
+        }
+
+        .dark .timeline-chip {
+            background: #0e0e0e;
+            border-color: #262626;
+            color: #a3a3a3;
+        }
+
+        .timeline-item:hover .timeline-chip {
+            border-color: #0e0e0e;
+            color: #0e0e0e;
+        }
+
+        .dark .timeline-item:hover .timeline-chip {
+            border-color: #ffffff;
+            color: #ffffff;
+        }
+
+        /* Reveal animation dengan delay bertingkat */
+        .timeline-item {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .timeline-item.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .timeline-item:nth-child(1) { transition-delay: 0.1s; }
+        .timeline-item:nth-child(2) { transition-delay: 0.2s; }
+
+        /* Line drawing animation */
+        .timeline::before {
+            transform-origin: top;
+            transform: scaleY(0);
+            transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .timeline.is-visible::before {
+            transform: scaleY(1);
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .timeline {
+                padding-left: 2rem;
+            }
+            .timeline::before {
+                left: 0.5rem;
+            }
+            .timeline-dot {
+                left: -2rem;
+                width: 1.5rem;
+                height: 1.5rem;
+            }
+            .timeline-card {
+                padding: 1.25rem;
+            }
+        }
+    </style>
+
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -83,6 +366,8 @@
         <style>
             #preloader { display: none !important; }
             .reveal, .reveal-3d, .fx-char { opacity: 1 !important; transform: none !important; }
+            .timeline-item { opacity: 1 !important; transform: none !important; }
+            .timeline::before { transform: scaleY(1) !important; }
         </style>
     </noscript>
 </head>
@@ -168,10 +453,10 @@
                     <div class="fx-tilt__shadow"></div>
                     <div class="fx-tilt__inner">
                         <div class="fx-tilt__layer bg-gray-100 dark:bg-white p-3 rounded-2xl shadow-2xl">
-                            <img src="keren.webp" width="800" height="737"
+                            <img src="gambar2.jpg" width="800" height="737"
                                  alt="Potret Muhamad Zaidan Faiz"
                                  loading="lazy" decoding="async"
-                                 class="w-full h-[280px] object-cover object-top rounded-xl filter grayscale hover:grayscale-0 transition-all duration-700">
+                                 class="w-full h-[280px] object-cover object-top rounded-xl transition-all duration-700">
                         </div>
                         <div class="fx-tilt__glare rounded-2xl"></div>
                     </div>
@@ -200,21 +485,60 @@
                     </div>
                 </div>
 
+                <!-- ============================================
+                     JEJAK PENDIDIKAN & PENGALAMAN
+                     ============================================ -->
                 <div class="reveal-3d">
-                    <h2 class="text-2xl font-bold text-black dark:text-white mb-10 uppercase tracking-widest">Jejak Pendidikan</h2>
+                    <h2 class="text-2xl font-bold text-black dark:text-white mb-10 uppercase tracking-widest">Jejak Pendidikan &amp; Pengalaman</h2>
 
-                    <div class="border-l-2 border-gray-200 dark:border-borderdark ml-3 pl-10">
-                        <div class="relative group cursor-default">
-                            <div class="absolute -left-[48px] top-1.5 w-4 h-4 bg-black dark:bg-white rounded-full ring-4 ring-gray-100 dark:ring-bgdark transition-transform duration-300 group-hover:scale-150"></div>
+                    <div class="timeline" id="timeline">
+                        
+                        <!-- ENTRY 1: SMK Negeri 1 Pasuruan -->
+                        <div class="timeline-item">
+                            <div class="timeline-dot is-active">
+                                <i class='bx bx-book-bookmark text-xs text-emerald-600 dark:text-emerald-400' style="display:none;"></i>
+                            </div>
 
-                            <div class="bg-gray-50 dark:bg-carddark p-6 rounded-2xl border border-gray-200 dark:border-borderdark group-hover:border-black dark:group-hover:border-white transition-colors duration-300">
-                                <p class="text-[11px] md:text-xs font-bold tracking-widest text-emerald-600 dark:text-emerald-400 mb-2 md:mb-3 bg-emerald-100 dark:bg-emerald-900/30 w-fit px-3 py-1 rounded-full">2024 &mdash; SEKARANG</p>
-                                <h3 class="text-2xl md:text-3xl font-bold text-black dark:text-white mb-2 md:mb-4">SMK Negeri 1 Pasuruan</h3>
+                            <div class="timeline-card">
+                                <div class="timeline-badge badge-active">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                    2024 — Sekarang
+                                </div>
+                                <h3 class="text-xl md:text-2xl font-bold text-black dark:text-white mb-2">SMK Negeri 1 Pasuruan</h3>
                                 <p class="text-sm md:text-base text-gray-600 dark:text-textmuted leading-relaxed">
                                     Jurusan Rekayasa Perangkat Lunak (RPL). Mendalami konsep algoritma kompleks, struktur data, Pemrograman Berorientasi Objek (OOP), dan pembangunan arsitektur aplikasi berbasis <em class="not-italic font-semibold text-black dark:text-white">full-stack</em>.
                                 </p>
+                                <div class="timeline-chips">
+                                    <span class="timeline-chip">Algoritma</span>
+                                    <span class="timeline-chip">Struktur Data</span>
+                                    <span class="timeline-chip">OOP</span>
+                                    <span class="timeline-chip">Full-Stack</span>
+                                </div>
                             </div>
                         </div>
+
+                        <!-- ENTRY 2: IMPro Digital Malang -->
+                        <div class="timeline-item">
+                            <div class="timeline-dot is-pkl"></div>
+
+                            <div class="timeline-card is-pkl">
+                                <div class="timeline-badge badge-pkl">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
+                                    2026 1 Mei - 30 Agustus — Praktek Kerja Lapangan
+                                </div>
+                                <h3 class="text-xl md:text-2xl font-bold text-black dark:text-white mb-2">IMPro Digital Malang</h3>
+                                <p class="text-sm md:text-base text-gray-600 dark:text-textmuted leading-relaxed">
+                                    Menjalani Praktek Kerja Lapangan di <em class="not-italic font-semibold text-black dark:text-white">Digital Agency</em> yang bergerak di bidang digital marketing. Terlibat langsung dalam proyek nyata klien — mulai dari riset online, optimalisasi SEO, manajemen konten dan media sosial, hingga produksi aset visual dan analitik performa.
+                                </p>
+                                <div class="timeline-chips">
+                                    <span class="timeline-chip">SEO</span>
+                                    <span class="timeline-chip">Content Marketing</span>
+                                    <span class="timeline-chip">Social Media</span>
+                                    <span class="timeline-chip">Digital Ads</span>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
@@ -295,5 +619,57 @@
 
     <script src="js/main.js"></script>
     <script src="js/animations.js"></script>
+
+    <!-- ============================================================
+         TIMELINE SCROLL REVEAL
+         ============================================================ -->
+    <script>
+        (function () {
+            'use strict';
+
+            const timeline = document.getElementById('timeline');
+            if (!timeline) return;
+
+            const items = timeline.querySelectorAll('.timeline-item');
+
+            // Intersection Observer untuk animasi timeline
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting) {
+                            // Animate garis timeline
+                            timeline.classList.add('is-visible');
+
+                            // Animate items
+                            items.forEach(function (item) {
+                                item.classList.add('is-visible');
+                            });
+
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, {
+                    threshold: 0.15,
+                    rootMargin: '0px 0px -50px 0px'
+                });
+
+                observer.observe(timeline);
+            } else {
+                // Fallback: langsung visible
+                timeline.classList.add('is-visible');
+                items.forEach(function (item) {
+                    item.classList.add('is-visible');
+                });
+            }
+
+            // Reduce motion: langsung visible
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                timeline.classList.add('is-visible');
+                items.forEach(function (item) {
+                    item.classList.add('is-visible');
+                });
+            }
+        })();
+    </script>
 </body>
 </html>
