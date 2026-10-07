@@ -1,15 +1,13 @@
 /* ==========================================================================
-   ZAIDAN — Mesin Animasi 3D
+   ZAIDAN — Mesin Animasi 3D & Interaksi Mikro (Versi Terpadu)
    --------------------------------------------------------------------------
-   Semua efek di bawah ini ditulis dari nol: tidak ada Three.js, tidak ada
-   GSAP, tidak ada dependensi apa pun. Matematika 3D-nya dihitung manual
-   (rotasi matriks + proyeksi perspektif), jadi situsnya tetap ringan dan
-   bisa jalan lewat file:// tanpa internet.
-
-   Prinsip yang dipegang:
-   - Tidak ada satu pun efek yang diperlukan untuk membaca isi halaman.
-   - Semua dimatikan otomatis kalau pengguna pakai "reduce motion".
-   - Semua animasi berhenti saat tab tidak aktif atau elemen di luar layar.
+   Ditulis murni dengan Vanilla JavaScript tanpa dependensi eksternal.
+   Dilengkapi:
+   - Bola Fibonacci 3D dengan efek napas (breathing) & riak klik (pulse)
+   - Kursor magnetik dengan dukungan label kontekstual (data-fx-cursor-label)
+   - Ambient spotlight yang mengikuti pointer
+   - Kubus 3D dengan inersia geser & rotasi klik otomatis
+   - Smart Session Preloader agar navigasi balik tidak mengulang loading
    ========================================================================== */
 
 (function () {
@@ -37,12 +35,14 @@
     }
 
     /* ======================================================================
-       1. KANVAS PARTIKEL 3D DI HERO
+       1. KANVAS 3D CYBERNETIC POLYHEDRON & ORBITAL CONSTELLATION
        ----------------------------------------------------------------------
-       Titik-titik disebar di permukaan bola memakai sebaran Fibonacci
-       (supaya jaraknya rata, tidak menumpuk di kutub). Tiap titik dirotasi
-       dengan matriks Y lalu X, kemudian diproyeksikan ke layar 2D memakai
-       rumus perspektif sederhana: skala = d / (d + z).
+       Engine 3D Vanilla WebGL/Canvas tanpa dependensi eksternal.
+       - Core Polyhedron Geodesik 3D dengan depth sorting & glowing nodes
+       - Cincin orbit ganda (dual orbital rings) berputar 3D di bidang miring
+       - Inersia kursor (mouse torque + lerp damping) & gaya magnetik
+       - Riak kejut 3D elastis saat klik (shockwave impulse)
+       - Kamera 3D yang bertransformasi dinamis saat halaman digulir
        ====================================================================== */
     function initHeroCanvas() {
         const canvas = document.getElementById('fx-hero-canvas');
@@ -51,49 +51,117 @@
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
-        const COUNT = 118;
-        const EDGE_LIMIT = 0.46;
-        const PERSPECTIVE = 2.7;
-        const BUCKETS = 8;
+        const PERSPECTIVE = 3.2;
 
-        /* --- Sebaran Fibonacci di permukaan bola --- */
-        const pts = [];
-        const GOLDEN = Math.PI * (3 - Math.sqrt(5));
-        for (let i = 0; i < COUNT; i++) {
-            const y = 1 - (i / (COUNT - 1)) * 2;
+        /* Geometri Inti: Geodesic Polyhedron Lattice */
+        const corePts = [];
+        const CORE_COUNT = 52;
+        const PHI = (1 + Math.sqrt(5)) / 2;
+
+        for (let i = 0; i < CORE_COUNT; i++) {
+            const y = 1 - (i / (CORE_COUNT - 1)) * 2;
             const r = Math.sqrt(Math.max(0, 1 - y * y));
-            const th = GOLDEN * i;
-            pts.push({ x: Math.cos(th) * r, y: y, z: Math.sin(th) * r });
+            const theta = i * PHI * Math.PI * 2;
+            corePts.push({
+                x: Math.cos(theta) * r,
+                y: y,
+                z: Math.sin(theta) * r,
+                type: 'core'
+            });
         }
 
-        /* --- Daftar garis penghubung ---
-           Dihitung SEKALI saja di awal. Jarak antar titik tidak pernah
-           berubah saat bola berputar, jadi tidak perlu dihitung ulang tiap
-           frame. Ini yang membuat animasinya tetap ringan. */
-        const edges = [];
-        for (let i = 0; i < COUNT; i++) {
-            for (let j = i + 1; j < COUNT; j++) {
-                const a = pts[i];
-                const b = pts[j];
+        /* Tepi koneksi core (lattice chords) */
+        const coreEdges = [];
+        const CORE_EDGE_DIST = 0.58;
+        for (let i = 0; i < CORE_COUNT; i++) {
+            for (let j = i + 1; j < CORE_COUNT; j++) {
+                const a = corePts[i];
+                const b = corePts[j];
                 const dx = a.x - b.x;
                 const dy = a.y - b.y;
                 const dz = a.z - b.z;
-                const d = Math.sqrt(dx * dx + dy * dy + dz * dz);
-                if (d < EDGE_LIMIT) edges.push([i, j, d]);
+                const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+                if (dist < CORE_EDGE_DIST) {
+                    coreEdges.push([i, j, dist]);
+                }
             }
         }
 
-        const px = new Float32Array(COUNT);
-        const py = new Float32Array(COUNT);
-        const pd = new Float32Array(COUNT);
+        /* Cincin Orbital 1: Bidang khatulistiwa miring (Equatorial Inclined Ring) */
+        const RING1_COUNT = 24;
+        const ring1Pts = [];
+        const RING1_RADIUS = 1.38;
+        for (let i = 0; i < RING1_COUNT; i++) {
+            const th = (i / RING1_COUNT) * Math.PI * 2;
+            const rx = Math.cos(th) * RING1_RADIUS;
+            const rz = Math.sin(th) * RING1_RADIUS;
+            /* Miringkan 28 derajat */
+            const tilt = 0.48;
+            ring1Pts.push({
+                x: rx,
+                y: rz * Math.sin(tilt),
+                z: rz * Math.cos(tilt),
+                baseAngle: th,
+                type: 'ring1'
+            });
+        }
+
+        /* Cincin Orbital 2: Bidang kutub miring berlawanan (Polar Cross Ring) */
+        const RING2_COUNT = 20;
+        const ring2Pts = [];
+        const RING2_RADIUS = 1.62;
+        for (let i = 0; i < RING2_COUNT; i++) {
+            const th = (i / RING2_COUNT) * Math.PI * 2;
+            const ry = Math.cos(th) * RING2_RADIUS;
+            const rz = Math.sin(th) * RING2_RADIUS;
+            const tilt = -0.55;
+            ring2Pts.push({
+                x: rz * Math.sin(tilt),
+                y: ry,
+                z: rz * Math.cos(tilt),
+                baseAngle: th,
+                type: 'ring2'
+            });
+        }
+
+        /* Partikel Mengambang di Ruang 3D (Ambient Starfield) */
+        const STAR_COUNT = 36;
+        const stars = [];
+        for (let i = 0; i < STAR_COUNT; i++) {
+            const radius = 1.2 + Math.random() * 0.9;
+            const theta = Math.random() * Math.PI * 2;
+            const phi = (Math.random() - 0.5) * Math.PI;
+            stars.push({
+                x: Math.cos(theta) * Math.cos(phi) * radius,
+                y: Math.sin(phi) * radius,
+                z: Math.sin(theta) * Math.cos(phi) * radius,
+                speed: 0.003 + Math.random() * 0.004,
+                phase: Math.random() * Math.PI * 2,
+                size: 0.6 + Math.random() * 1.2,
+                type: 'star'
+            });
+        }
 
         let W = 0;
         let H = 0;
-        let spinY = 0;
-        let pointerX = 0;
-        let pointerY = 0;
-        let smoothX = 0;
-        let smoothY = 0;
+        let rotY = 0;
+        let rotX = -0.2;
+        let ring1Spin = 0;
+        let ring2Spin = 0;
+        let breathPhase = 0;
+        let clickShock = 0;
+        let shockVel = 0;
+
+        let mouseX = 0;
+        let mouseY = 0;
+        let targetRotX = -0.15;
+        let targetRotY = 0;
+        let curRotX = -0.15;
+        let curRotY = 0;
+
+        let screenPointerX = -9999;
+        let screenPointerY = -9999;
+
         let visible = true;
         let raf = null;
 
@@ -107,70 +175,198 @@
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         }
 
+        function project3D(x, y, z, cx, cy, radius, cosY, sinY, cosX, sinX) {
+            /* Rotasi Y */
+            const x1 = x * cosY - z * sinY;
+            const z1 = x * sinY + z * cosY;
+            /* Rotasi X */
+            const y2 = y * cosX - z1 * sinX;
+            const z2 = y * sinX + z1 * cosX;
+
+            const scale = PERSPECTIVE / (PERSPECTIVE + z2);
+            return {
+                px: cx + x1 * scale * radius,
+                py: cy + y2 * scale * radius,
+                depth: clamp((scale - 0.65) / 0.85, 0, 1),
+                rawZ: z2,
+                scale: scale
+            };
+        }
+
         function draw() {
-            const scrollRatio = clamp(window.scrollY / Math.max(1, window.innerHeight), 0, 1.5);
-            spinY += 0.0021;
-            smoothX = lerp(smoothX, pointerX, 0.045);
-            smoothY = lerp(smoothY, pointerY, 0.045);
+            const scrollRatio = clamp(window.scrollY / Math.max(1, window.innerHeight), 0, 1.4);
 
-            const ry = spinY + smoothX * 1.0;
-            const rx = -0.22 + smoothY * 0.55 + scrollRatio * 0.5;
-
-            const cosY = Math.cos(ry);
-            const sinY = Math.sin(ry);
-            const cosX = Math.cos(rx);
-            const sinX = Math.sin(rx);
-
-            const radius = Math.min(W, H) * 0.40;
-            const cx = W * 0.5;
-            const cy = H * 0.5;
-
-            for (let i = 0; i < COUNT; i++) {
-                const p = pts[i];
-                const x1 = p.x * cosY - p.z * sinY;
-                const z1 = p.x * sinY + p.z * cosY;
-                const y2 = p.y * cosX - z1 * sinX;
-                const z2 = p.y * sinX + z1 * cosX;
-
-                const s = PERSPECTIVE / (PERSPECTIVE + z2);
-                px[i] = cx + x1 * s * radius;
-                py[i] = cy + y2 * s * radius;
-                pd[i] = clamp((s - 0.72) / 0.86, 0, 1);
+            /* Fisika Shockwave Elastis */
+            if (clickShock > 0.001 || Math.abs(shockVel) > 0.001) {
+                const spring = (0 - clickShock) * 0.14;
+                shockVel = (shockVel + spring) * 0.82;
+                clickShock += shockVel;
+            } else {
+                clickShock = 0;
+                shockVel = 0;
             }
+
+            breathPhase += 0.016;
+            ring1Spin += 0.0045;
+            ring2Spin -= 0.0035;
+            rotY += 0.0028;
+
+            /* Lerp rotasi kursor yang halus dengan inersia */
+            curRotX = lerp(curRotX, targetRotX + scrollRatio * 0.85, 0.05);
+            curRotY = lerp(curRotY, targetRotY, 0.05);
+
+            const totalRotY = rotY + curRotY;
+            const totalRotX = curRotX;
+
+            const cosY = Math.cos(totalRotY);
+            const sinY = Math.sin(totalRotY);
+            const cosX = Math.cos(totalRotX);
+            const sinX = Math.sin(totalRotX);
+
+            /* Efek nafas berdenyut + gelombang sentak klik */
+            const breath = 1 + Math.sin(breathPhase) * 0.035 + clickShock * 0.28;
+            /* Skala mengecil anggun saat scroll menjauh dari hero */
+            const scrollScale = 1 - scrollRatio * 0.22;
+            const baseRadius = Math.min(W, H) * 0.38 * breath * scrollScale;
+
+            /* Pusatkan 3D canvas di area seimbang */
+            const cx = W > 1024 ? W * 0.54 : W * 0.5;
+            const cy = H * 0.48;
 
             ctx.clearRect(0, 0, W, H);
 
-            /* --- Garis: dikelompokkan jadi 8 tingkat transparansi supaya
-                   kita hanya mengganti strokeStyle 8 kali, bukan ~600 kali --- */
-            const paths = [];
-            for (let b = 0; b < BUCKETS; b++) paths.push(new Path2D());
+            const isDark = document.documentElement.classList.contains('dark');
+            const ink = inkCache;
 
-            for (let e = 0; e < edges.length; e++) {
-                const edge = edges[e];
-                const i = edge[0];
-                const j = edge[1];
-                const depth = Math.min(pd[i], pd[j]);
-                const alpha = (1 - edge[2] / EDGE_LIMIT) * depth * 0.45;
+            /* 1. Gambar Inti Polyhedron (Geodesic Wireframe) */
+            const projCore = new Array(CORE_COUNT);
+            for (let i = 0; i < CORE_COUNT; i++) {
+                const p = corePts[i];
+                projCore[i] = project3D(p.x, p.y, p.z, cx, cy, baseRadius, cosY, sinY, cosX, sinX);
+            }
+
+            /* Garis-garis penghubung core */
+            for (let e = 0; e < coreEdges.length; e++) {
+                const edge = coreEdges[e];
+                const p1 = projCore[edge[0]];
+                const p2 = projCore[edge[1]];
+
+                const avgDepth = (p1.depth + p2.depth) * 0.5;
+                if (avgDepth < 0.05) continue;
+
+                const alpha = (1 - edge[2] / CORE_EDGE_DIST) * avgDepth * (isDark ? 0.38 : 0.26);
                 if (alpha < 0.015) continue;
-                const bucket = Math.min(BUCKETS - 1, Math.floor(alpha * BUCKETS));
-                const path = paths[bucket];
-                path.moveTo(px[i], py[i]);
-                path.lineTo(px[j], py[j]);
-            }
 
-            ctx.lineWidth = 1;
-            for (let b = 0; b < BUCKETS; b++) {
-                const alpha = ((b + 0.5) / BUCKETS) * 0.9;
-                ctx.strokeStyle = 'rgba(' + inkCache[0] + ',' + inkCache[1] + ',' + inkCache[2] + ',' + alpha.toFixed(3) + ')';
-                ctx.stroke(paths[b]);
-            }
-
-            /* --- Titik --- */
-            for (let i = 0; i < COUNT; i++) {
-                const depth = pd[i];
                 ctx.beginPath();
-                ctx.arc(px[i], py[i], 0.7 + depth * 1.9, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(' + inkCache[0] + ',' + inkCache[1] + ',' + inkCache[2] + ',' + (0.18 + depth * 0.6).toFixed(3) + ')';
+                ctx.moveTo(p1.px, p1.py);
+                ctx.lineTo(p2.px, p2.py);
+                ctx.strokeStyle = 'rgba(' + ink[0] + ',' + ink[1] + ',' + ink[2] + ',' + alpha.toFixed(3) + ')';
+                ctx.lineWidth = avgDepth > 0.6 ? 1.2 : 0.75;
+                ctx.stroke();
+            }
+
+            /* 2. Gambar Cincin Orbital 1 (Equatorial Inclined Orbit) */
+            const projRing1 = new Array(RING1_COUNT);
+            ctx.beginPath();
+            for (let i = 0; i < RING1_COUNT; i++) {
+                const p = ring1Pts[i];
+                const dynamicAngle = p.baseAngle + ring1Spin;
+                const rx = Math.cos(dynamicAngle) * RING1_RADIUS;
+                const rz = Math.sin(dynamicAngle) * RING1_RADIUS;
+                const tilt = 0.48;
+                const curY = rz * Math.sin(tilt);
+                const curZ = rz * Math.cos(tilt);
+
+                projRing1[i] = project3D(rx, curY, curZ, cx, cy, baseRadius, cosY, sinY, cosX, sinX);
+            }
+
+            for (let i = 0; i < RING1_COUNT; i++) {
+                const next = (i + 1) % RING1_COUNT;
+                const p1 = projRing1[i];
+                const p2 = projRing1[next];
+                const avgDepth = (p1.depth + p2.depth) * 0.5;
+
+                ctx.beginPath();
+                ctx.moveTo(p1.px, p1.py);
+                ctx.lineTo(p2.px, p2.py);
+                const ringAlpha = (0.12 + avgDepth * 0.28) * (isDark ? 0.65 : 0.45);
+                ctx.strokeStyle = 'rgba(' + ink[0] + ',' + ink[1] + ',' + ink[2] + ',' + ringAlpha.toFixed(3) + ')';
+                ctx.lineWidth = avgDepth > 0.5 ? 1 : 0.6;
+                ctx.stroke();
+            }
+
+            /* 3. Gambar Cincin Orbital 2 (Polar Inclined Orbit) */
+            const projRing2 = new Array(RING2_COUNT);
+            for (let i = 0; i < RING2_COUNT; i++) {
+                const p = ring2Pts[i];
+                const dynamicAngle = p.baseAngle + ring2Spin;
+                const ry = Math.cos(dynamicAngle) * RING2_RADIUS;
+                const rz = Math.sin(dynamicAngle) * RING2_RADIUS;
+                const tilt = -0.55;
+                const curX = rz * Math.sin(tilt);
+                const curZ = rz * Math.cos(tilt);
+
+                projRing2[i] = project3D(curX, ry, curZ, cx, cy, baseRadius, cosY, sinY, cosX, sinX);
+            }
+
+            for (let i = 0; i < RING2_COUNT; i++) {
+                const next = (i + 1) % RING2_COUNT;
+                const p1 = projRing2[i];
+                const p2 = projRing2[next];
+                const avgDepth = (p1.depth + p2.depth) * 0.5;
+
+                ctx.beginPath();
+                ctx.moveTo(p1.px, p1.py);
+                ctx.lineTo(p2.px, p2.py);
+                const ringAlpha = (0.08 + avgDepth * 0.22) * (isDark ? 0.55 : 0.38);
+                ctx.strokeStyle = 'rgba(' + ink[0] + ',' + ink[1] + ',' + ink[2] + ',' + ringAlpha.toFixed(3) + ')';
+                ctx.lineWidth = 0.7;
+                ctx.stroke();
+            }
+
+            /* 4. Titik Node Core Polyhedron dengan Halo & Efek Magnetik */
+            for (let i = 0; i < CORE_COUNT; i++) {
+                const p = projCore[i];
+                const depth = p.depth;
+
+                /* Deteksi kedekatan kursor (magnetik halus) */
+                const distToMouse = Math.hypot(p.px - screenPointerX, p.py - screenPointerY);
+                const isNear = distToMouse < 110;
+                const nodeSize = (0.8 + depth * 2.2) * (isNear ? 1.6 : 1);
+                const nodeAlpha = clamp(0.2 + depth * 0.75 + (isNear ? 0.25 : 0), 0, 1);
+
+                /* Soft ambient glow halo untuk foreground nodes */
+                if (depth > 0.65) {
+                    const glowRadius = nodeSize * 3.5;
+                    const glow = ctx.createRadialGradient(p.px, p.py, 0, p.px, p.py, glowRadius);
+                    glow.addColorStop(0, 'rgba(' + ink[0] + ',' + ink[1] + ',' + ink[2] + ',' + (nodeAlpha * 0.28).toFixed(3) + ')');
+                    glow.addColorStop(1, 'rgba(' + ink[0] + ',' + ink[1] + ',' + ink[2] + ', 0)');
+                    ctx.beginPath();
+                    ctx.arc(p.px, p.py, glowRadius, 0, Math.PI * 2);
+                    ctx.fillStyle = glow;
+                    ctx.fill();
+                }
+
+                ctx.beginPath();
+                ctx.arc(p.px, p.py, nodeSize, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(' + ink[0] + ',' + ink[1] + ',' + ink[2] + ',' + nodeAlpha.toFixed(3) + ')';
+                ctx.fill();
+            }
+
+            /* 5. Partikel Bintang Mengambang (Floating Cosmic Stars) */
+            for (let i = 0; i < STAR_COUNT; i++) {
+                const s = stars[i];
+                s.phase += s.speed;
+                const oscX = s.x + Math.sin(s.phase) * 0.12;
+                const oscY = s.y + Math.cos(s.phase * 0.8) * 0.12;
+                const proj = project3D(oscX, oscY, s.z, cx, cy, baseRadius, cosY, sinY, cosX, sinX);
+
+                if (proj.depth < 0.1) continue;
+                const starAlpha = (0.15 + proj.depth * 0.55) * (isDark ? 0.85 : 0.55);
+
+                ctx.beginPath();
+                ctx.arc(proj.px, proj.py, s.size * proj.depth, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(' + ink[0] + ',' + ink[1] + ',' + ink[2] + ',' + starAlpha.toFixed(3) + ')';
                 ctx.fill();
             }
         }
@@ -226,13 +422,31 @@
             resizeTimer = setTimeout(function () {
                 resize();
                 if (reduceMotion.matches) draw();
-            }, 150);
+            }, 120);
         });
 
         if (finePointer.matches) {
             window.addEventListener('pointermove', function (e) {
-                pointerX = (e.clientX / window.innerWidth) * 2 - 1;
-                pointerY = (e.clientY / window.innerHeight) * 2 - 1;
+                screenPointerX = e.clientX;
+                screenPointerY = e.clientY;
+                mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+                mouseY = (e.clientY / window.innerHeight) * 2 - 1;
+
+                targetRotY = mouseX * 0.95;
+                targetRotX = -0.18 + mouseY * 0.45;
+            }, { passive: true });
+
+            window.addEventListener('pointerleave', function () {
+                screenPointerX = -9999;
+                screenPointerY = -9999;
+                targetRotY = 0;
+                targetRotX = -0.18;
+            });
+
+            window.addEventListener('pointerdown', function () {
+                if (visible && !reduceMotion.matches) {
+                    shockVel = 0.55;
+                }
             }, { passive: true });
         }
 
@@ -251,7 +465,6 @@
         const maxAngle = parseFloat(root.getAttribute('data-fx-tilt')) || 11;
         const shadow = root.querySelector('.fx-tilt__shadow');
 
-        /* Lapisan diberi kedalaman sekali saja di awal */
         root.querySelectorAll('[data-fx-depth]').forEach(function (layer) {
             const depth = parseFloat(layer.getAttribute('data-fx-depth')) || 0;
             layer.style.transform = 'translateZ(' + depth + 'px)';
@@ -314,8 +527,6 @@
         if (!nodes.length) return;
 
         if (!finePointer.matches || reduceMotion.matches) {
-            /* Tanpa kursor presisi, lapisan tetap diberi kedalaman statis
-               supaya tampilannya masih terasa bertingkat. */
             nodes.forEach(function (root) {
                 root.querySelectorAll('[data-fx-depth]').forEach(function (layer) {
                     const depth = parseFloat(layer.getAttribute('data-fx-depth')) || 0;
@@ -329,7 +540,7 @@
     }
 
     /* ======================================================================
-       3. KUBUS KEAHLIAN 3D — berputar sendiri, bisa diputar dengan kursor
+       3. KUBUS KEAHLIAN 3D — kontrol putar interaktif, drag & telemetri
        ====================================================================== */
     function initCube() {
         const scene = document.querySelector('[data-fx-cube]');
@@ -338,47 +549,108 @@
         const cube = scene.querySelector('.fx-cube');
         if (!cube) return;
 
+        const coordsEl = document.getElementById('fx-cube-coords');
+        const faceButtons = document.querySelectorAll('[data-fx-face]');
+
         let ry = -32;
         let rx = -16;
+        let targetRx = null;
+        let targetRy = null;
         let velocity = 0;
         let dragging = false;
         let hovering = false;
         let lastX = 0;
         let lastY = 0;
+        let downX = 0;
+        let downY = 0;
         let visible = true;
         let raf = null;
 
         const BASE_TILT = -16;
-        const AUTO_SPEED = 0.24;
+        const AUTO_SPEED = 0.22;
+
+        /* Target rotasi tiap sisi */
+        const FACE_TARGETS = {
+            front: { rx: -10, ry: 0 },
+            right: { rx: -10, ry: -90 },
+            back:  { rx: -10, ry: -180 },
+            left:  { rx: -10, ry: 90 },
+            top:   { rx: -85, ry: 0 }
+        };
 
         function apply() {
             cube.style.setProperty('--fx-cube-ry', ry.toFixed(2) + 'deg');
             cube.style.setProperty('--fx-cube-rx', rx.toFixed(2) + 'deg');
+
+            if (coordsEl) {
+                let normRy = Math.round(ry % 360);
+                if (normRy > 180) normRy -= 360;
+                else if (normRy < -180) normRy += 360;
+                coordsEl.textContent = 'ROTASI 3D: ' + Math.round(rx) + '° X / ' + normRy + '° Y';
+            }
         }
 
         function tick() {
             raf = requestAnimationFrame(tick);
             if (!visible || document.hidden) return;
 
-            if (!dragging) {
+            if (targetRx !== null && targetRy !== null && !dragging) {
+                /* Snapping ke target sisi dengan lerp lembut */
+                rx = lerp(rx, targetRx, 0.08);
+                ry = lerp(ry, targetRy, 0.08);
+
+                if (Math.abs(rx - targetRx) < 0.2 && Math.abs(ry - targetRy) < 0.2) {
+                    rx = targetRx;
+                    ry = targetRy;
+                    targetRx = null;
+                    targetRy = null;
+                }
+            } else if (!dragging) {
                 velocity *= 0.93;
                 if (Math.abs(velocity) < 0.001) velocity = 0;
                 ry += velocity;
 
                 if (!hovering && !reduceMotion.matches) ry += AUTO_SPEED;
-
-                /* Kemiringan kembali ke posisi semula dengan lembut */
-                rx = lerp(rx, BASE_TILT, 0.03);
+                rx = lerp(rx, BASE_TILT, 0.035);
             }
 
             apply();
         }
 
+        /* Tangani tombol pemilih sisi kubus */
+        faceButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const face = btn.getAttribute('data-fx-face');
+                if (FACE_TARGETS[face]) {
+                    /* Hitung putaran terdekat untuk ry */
+                    const target = FACE_TARGETS[face];
+                    targetRx = target.rx;
+
+                    const curRot = ry % 360;
+                    let diff = target.ry - curRot;
+                    while (diff < -180) diff += 360;
+                    while (diff > 180) diff -= 360;
+                    targetRy = ry + diff;
+
+                    velocity = 0;
+
+                    faceButtons.forEach(b => {
+                        b.classList.remove('active', 'bg-black', 'text-white', 'dark:bg-white', 'dark:text-black');
+                        b.classList.add('bg-transparent', 'text-gray-600', 'dark:text-textmuted');
+                    });
+                    btn.classList.add('active', 'bg-black', 'text-white', 'dark:bg-white', 'dark:text-black');
+                    btn.classList.remove('bg-transparent', 'text-gray-600', 'dark:text-textmuted');
+                }
+            });
+        });
+
         scene.addEventListener('pointerdown', function (e) {
             if (reduceMotion.matches) return;
             dragging = true;
-            lastX = e.clientX;
-            lastY = e.clientY;
+            targetRx = null;
+            targetRy = null;
+            lastX = downX = e.clientX;
+            lastY = downY = e.clientY;
             velocity = 0;
             scene.classList.add('is-dragging');
             if (scene.setPointerCapture) {
@@ -399,10 +671,15 @@
             apply();
         });
 
-        function endDrag() {
+        function endDrag(e) {
             if (!dragging) return;
             dragging = false;
             scene.classList.remove('is-dragging');
+
+            /* Jika pengguna hanya mengklik (bukan menggeser), beri dorongan putaran */
+            if (e && Math.hypot(e.clientX - downX, e.clientY - downY) < 6) {
+                velocity = 6.5;
+            }
         }
 
         scene.addEventListener('pointerup', endDrag);
@@ -434,7 +711,7 @@
     }
 
     /* ======================================================================
-       4. KARTU PROYEK 3D — tilt + chip yang naik ke depan
+       4. KARTU PROYEK 3D — untuk halaman arsip proyek ([data-fx-card])
        ====================================================================== */
     function initCardTilt() {
         if (!finePointer.matches || reduceMotion.matches) return;
@@ -494,53 +771,88 @@
     }
 
     /* ======================================================================
-       5. KURSOR MAGNETIK
+       5. KURSOR MAGNETIK, LABEL KONTEKSTUAL & AMBIENT SPOTLIGHT
        ====================================================================== */
     function initCursor() {
         if (!finePointer.matches || reduceMotion.matches) return;
 
+        const spotlight = document.createElement('div');
+        spotlight.className = 'fx-spotlight';
+        spotlight.setAttribute('aria-hidden', 'true');
+
         const ring = document.createElement('div');
         ring.className = 'fx-cursor';
+        ring.setAttribute('aria-hidden', 'true');
+
+        const labelSpan = document.createElement('span');
+        labelSpan.className = 'fx-cursor__label';
+        ring.appendChild(labelSpan);
+
         const dot = document.createElement('div');
         dot.className = 'fx-cursor-dot';
+        dot.setAttribute('aria-hidden', 'true');
+
+        document.body.appendChild(spotlight);
         document.body.appendChild(ring);
         document.body.appendChild(dot);
 
-        const SELECTOR = 'a, button, [data-fx-cursor]';
+        const SELECTOR = 'a, button, [data-fx-cursor], [data-fx-cursor-label]';
         let mx = -200;
         let my = -200;
         let rx = -200;
         let ry = -200;
+        let sx = window.innerWidth / 2;
+        let sy = window.innerHeight / 2;
 
         window.addEventListener('pointermove', function (e) {
             mx = e.clientX;
             my = e.clientY;
             ring.classList.add('is-visible');
             dot.classList.add('is-visible');
+            spotlight.classList.add('is-visible');
         }, { passive: true });
 
         document.addEventListener('pointerleave', function () {
             ring.classList.remove('is-visible');
             dot.classList.remove('is-visible');
+            spotlight.classList.remove('is-visible');
         });
 
         document.addEventListener('pointerover', function (e) {
-            if (e.target instanceof Element && e.target.closest(SELECTOR)) {
+            if (!(e.target instanceof Element)) return;
+            const labeled = e.target.closest('[data-fx-cursor-label]');
+            if (labeled) {
+                labelSpan.textContent = labeled.getAttribute('data-fx-cursor-label') || '';
+                ring.classList.add('has-label');
+                ring.classList.remove('is-hover');
+                return;
+            }
+            if (e.target.closest(SELECTOR)) {
                 ring.classList.add('is-hover');
             }
         });
 
         document.addEventListener('pointerout', function (e) {
-            if (e.target instanceof Element && e.target.closest(SELECTOR)) {
+            if (!(e.target instanceof Element)) return;
+            const labeled = e.target.closest('[data-fx-cursor-label]');
+            if (labeled) {
+                ring.classList.remove('has-label');
+                labelSpan.textContent = '';
+            }
+            if (e.target.closest(SELECTOR)) {
                 ring.classList.remove('is-hover');
             }
         });
 
         (function loop() {
-            rx = lerp(rx, mx, 0.17);
-            ry = lerp(ry, my, 0.17);
-            ring.style.transform = 'translate(' + rx.toFixed(2) + 'px,' + ry.toFixed(2) + 'px)';
-            dot.style.transform = 'translate(' + mx.toFixed(2) + 'px,' + my.toFixed(2) + 'px)';
+            rx = lerp(rx, mx, 0.18);
+            ry = lerp(ry, my, 0.18);
+            sx = lerp(sx, mx, 0.09);
+            sy = lerp(sy, my, 0.09);
+
+            ring.style.transform = 'translate3d(' + rx.toFixed(2) + 'px,' + ry.toFixed(2) + 'px,0)';
+            dot.style.transform = 'translate3d(' + mx.toFixed(2) + 'px,' + my.toFixed(2) + 'px,0)';
+            spotlight.style.transform = 'translate3d(' + sx.toFixed(1) + 'px,' + sy.toFixed(1) + 'px,0)';
             requestAnimationFrame(loop);
         })();
     }
@@ -557,7 +869,7 @@
                 const dx = e.clientX - (rect.left + rect.width / 2);
                 const dy = e.clientY - (rect.top + rect.height / 2);
                 el.classList.add('is-live');
-                el.style.transform = 'translate(' + (dx * 0.2).toFixed(2) + 'px,' + (dy * 0.26).toFixed(2) + 'px)';
+                el.style.transform = 'translate3d(' + (dx * 0.2).toFixed(2) + 'px,' + (dy * 0.26).toFixed(2) + 'px,0)';
             });
 
             el.addEventListener('pointerleave', function () {
@@ -569,10 +881,6 @@
 
     /* ======================================================================
        7. TEKS PECAH HURUF — masuk berputar 3D
-       ----------------------------------------------------------------------
-       Hanya memecah simpul teks. Elemen anak (misalnya <span> ber-outline)
-       tetap utuh, dan spasi dibiarkan sebagai teks biasa supaya baris masih
-       bisa turun dengan normal.
        ====================================================================== */
     function initSplit() {
         const targets = document.querySelectorAll('[data-fx-split]');
@@ -665,7 +973,8 @@
        ====================================================================== */
     function initParallax() {
         const nodes = document.querySelectorAll('[data-fx-parallax]');
-        if (!nodes.length || reduceMotion.matches) return;
+        const nodesX = document.querySelectorAll('[data-fx-parallax-x]');
+        if ((!nodes.length && !nodesX.length) || reduceMotion.matches) return;
 
         let queued = false;
 
@@ -681,6 +990,15 @@
                 const offset = (center - vh / 2) * speed;
                 el.style.transform = 'translate3d(0,' + offset.toFixed(1) + 'px,0)';
             });
+
+            nodesX.forEach(function (el) {
+                const rect = el.getBoundingClientRect();
+                if (rect.bottom < -100 || rect.top > vh + 100) return;
+                const speed = parseFloat(el.getAttribute('data-fx-parallax-x')) || 0.15;
+                const progress = clamp((vh - rect.top) / (vh + rect.height), 0, 1);
+                const offset = (progress - 0.5) * 40 * speed;
+                el.style.transform = 'translate3d(' + offset.toFixed(1) + 'px,0,0)';
+            });
         }
 
         window.addEventListener('scroll', function () {
@@ -695,10 +1013,7 @@
     }
 
     /* ======================================================================
-       10. TRANSISI MASUK HALAMAN
-       ----------------------------------------------------------------------
-       Dijalankan setelah preloader selesai. Melengkapi animasi keluar yang
-       sudah ada, supaya perpindahan halaman terasa simetris.
+       10. TRANSISI MASUK HALAMAN & SMART SESSION PRELOADER
        ====================================================================== */
     function playEntrance() {
         if (reduceMotion.matches) return;
@@ -743,7 +1058,13 @@
         initProgress();
         initParallax();
 
-        /* Warna kanvas ikut berubah saat tema diganti */
+        /* Tandai bahwa preloader sudah pernah tampil di sesi ini */
+        window.addEventListener('load', function () {
+            try {
+                sessionStorage.setItem('zaidan_preloader_shown', '1');
+            } catch (e) { /* diabaikan */ }
+        });
+
         if ('MutationObserver' in window) {
             new MutationObserver(function () {
                 readInk();
