@@ -42,6 +42,7 @@
         const introName = $('introName');
         const introEmail = $('introEmail');
         const introSubmit = $('introSubmit');
+        const introSkipBtn = $('introSkipBtn');
         const messagesArea = $('messagesArea');
         const typingIndicator = $('typingIndicator');
         const quickReplies = $('quickReplies');
@@ -139,7 +140,7 @@
         });
 
         // ============================================================
-        // INTRO FORM
+        // INTRO FORM & SKIP
         // ============================================================
         function validateIntro() {
             const name = introName.value.trim();
@@ -172,6 +173,19 @@
             }
         });
 
+        if (introSkipBtn) {
+            introSkipBtn.addEventListener('click', async () => {
+                Core.setIdentity('Tamu', '');
+                try {
+                    await Core.setup();
+                    showChatScreen();
+                } catch (err) {
+                    console.error('[ChatPage] Skip setup error:', err);
+                    showChatScreen();
+                }
+            });
+        }
+
         // ============================================================
         // SCREEN SWITCHING
         // ============================================================
@@ -184,7 +198,7 @@
             introScreen.classList.add('is-hidden');
             chatScreen.classList.add('is-visible');
 
-            headerStatus.textContent = 'Online — biasanya balas dalam 1-2 jam';
+            headerStatus.innerHTML = '<span class="cp-status-dot"></span><span>Online &bull; Biasanya balas cepat</span>';
 
             await loadAndRenderMessages();
             Core.subscribeRealtime();
@@ -220,15 +234,21 @@
 
                 scrollToBottom(true); // Paksa scroll saat load awal
             } catch (err) {
-                messagesArea.innerHTML = '<div class="cp-loading"><i class="bx bx-error-circle"></i>Gagal memuat pesan</div>';
+                messagesArea.innerHTML = '';
+                renderEmptyHint();
             }
         }
 
         function renderEmptyHint() {
             messagesArea.innerHTML = `
-                <div class="cp-loading">
-                    <i class='bx bx-message-rounded-dots'></i>
-                    <span>Belum ada pesan. Mulai dengan sapaan!</span>
+                <div class="cp-msg is-admin cp-msg--welcome">
+                    <div class="cp-msg__avatar" title="Zaidan Assistant">
+                        <i class='bx bx-sparkles'></i>
+                    </div>
+                    <div class="cp-msg__bubble">
+                        <div class="cp-msg__text">Hi! Selamat datang di live chat langsung dengan Zaidan Faiz. Tanyakan apa saja tentang proyek web, keahlian, atau tawaran kerja sama!</div>
+                        <span class="cp-msg__time">Active now</span>
+                    </div>
                 </div>
             `;
         }
@@ -245,7 +265,7 @@
 
             const isAdmin = msg.sender === 'admin';
             const visitorName = Core.getVisitorName() || 'Kamu';
-            const initial = isAdmin ? 'Z' : visitorName.charAt(0).toUpperCase();
+            const initial = isAdmin ? '<i class="bx bx-sparkles"></i>' : escapeHtml(visitorName.charAt(0).toUpperCase());
 
             const row = document.createElement('div');
             row.className = 'cp-msg ' + (isAdmin ? 'is-admin' : 'is-visitor');
@@ -253,9 +273,9 @@
             if (!animate) row.style.animation = 'none';
 
             row.innerHTML = `
-                <div class="cp-msg__avatar">${escapeHtml(initial)}</div>
+                <div class="cp-msg__avatar">${initial}</div>
                 <div class="cp-msg__bubble">
-                    ${escapeHtml(msg.content)}
+                    <div class="cp-msg__text">${escapeHtml(msg.content)}</div>
                     <span class="cp-msg__time">${formatTime(msg.created_at)}</span>
                 </div>
             `;
@@ -355,11 +375,37 @@
         // ============================================================
         // QUICK REPLIES
         // ============================================================
+        const BOT_ANSWERS = {
+            'Halo Zaidan, saya tertarik kerja sama untuk bikin website.': 'Terima kasih atas minatnya! Zaidan siap membantu pembuatan landing page hingga aplikasi web full-stack. Ceritakan ringkasan ide atau kebutuhan proyekmu di sini!',
+            'Boleh minta info estimasi harga pembuatan website?': 'Biaya pembuatan website disesuaikan dengan skala proyek (jumlah halaman, fitur dinamis, integrasi database). Tuliskan detail kebutuhanmu untuk perkiraan yang lebih akurat!',
+            'Saya mau lihat portofolio proyek unggulan kamu dulu.': 'Kamu bisa melihat karya pilihan Zaidan seperti platform ZiFood (e-commerce UMKM) dan Jurnal PKL (sistem laporan magang) di halaman Proyek situs ini!',
+            'Apa saja tech stack dan skill utama yang kamu kuasai?': 'Tech stack utama Zaidan: HTML5, CSS3/Tailwind, JavaScript modern (ES6+), Laravel 12, PHP, MySQL, REST API, serta animasi WebGL/Canvas interaktif.',
+            'Boleh minta kontak WhatsApp atau email langsung?': 'Kamu bisa kontak langsung ke email zaidanf504@gmail.com atau melalui tautan kontak di footer beranda!'
+        };
+
         document.querySelectorAll('.chat-quick-reply').forEach(btn => {
             btn.addEventListener('click', () => {
-                chatInput.value = btn.dataset.text;
+                const text = btn.dataset.text;
+                chatInput.value = text;
                 autoGrow();
-                chatInput.focus();
+                chatForm.dispatchEvent(new Event('submit'));
+
+                const answer = BOT_ANSWERS[text];
+                if (answer) {
+                    typingIndicator.textContent = 'Zaidan sedang mengetik...';
+                    typingIndicator.classList.add('is-visible');
+                    setTimeout(() => {
+                        typingIndicator.classList.remove('is-visible');
+                        typingIndicator.textContent = '';
+                        appendMessage({
+                            id: 'bot_' + Date.now(),
+                            sender: 'admin',
+                            content: answer,
+                            created_at: new Date().toISOString()
+                        }, true);
+                        scrollToBottom(true);
+                    }, 650);
+                }
             });
         });
 
