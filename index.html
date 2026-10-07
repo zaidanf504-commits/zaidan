@@ -1,44 +1,40 @@
 <!DOCTYPE html>
-<html lang="id" class="no-js">
+<html lang="id" class="no-js scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Zaidan. — Pengembang Web Frontend &amp; UI/UX</title>
-    <meta name="description" content="Portofolio Muhamad Zaidan Faiz, pengembang web frontend dan perancang UI/UX dari Pasuruan. Membangun antarmuka web yang responsif, cepat, dan berfokus pada pengalaman pengguna.">
+    <title>Zaidan Faiz — Pengembang Web Frontend &amp; Full-Stack</title>
+    <meta name="description" content="Portofolio Muhamad Zaidan Faiz, Web Developer dari Pasuruan. Spesialis pengembangan antarmuka modern dan aplikasi web menggunakan Next.js, Laravel, dan Tailwind CSS.">
     <meta name="author" content="Muhamad Zaidan Faiz">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://example.com/">
+    <link rel="canonical" href="https://zaidan-nine.vercel.app/">
 
     <meta name="theme-color" content="#0e0e0e" media="(prefers-color-scheme: dark)">
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
 
-    <!-- Pratinjau saat link dibagikan ke WhatsApp, Instagram, atau LinkedIn.
-         GANTI https://example.com dengan alamat situsmu setelah di-onlinekan,
-         karena sebagian besar platform butuh alamat lengkap, bukan path relatif. -->
+    <!-- Open Graph / WhatsApp, Instagram, LinkedIn -->
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Zaidan Faiz">
     <meta property="og:locale" content="id_ID">
-    <meta property="og:title" content="Zaidan. — Pengembang Web Frontend &amp; UI/UX">
-    <meta property="og:description" content="Membangun antarmuka web yang responsif, cepat, dan berfokus pada pengalaman pengguna. Berbasis di Pasuruan, Jawa Timur.">
-    <meta property="og:url" content="https://example.com/">
-    <meta property="og:image" content="https://example.com/image/og-cover.jpg">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Zaidan Faiz — Pengembang Web Frontend dan UI/UX">
+    <meta property="og:title" content="Zaidan Faiz — Pengembang Web Frontend &amp; UI/UX">
+    <meta property="og:description" content="Mengubah desain kompleks menjadi aplikasi web yang cepat, interaktif, dan siap pakai. Lihat proyek dan studi kasus terbaru saya.">
+    <meta property="og:url" content="https://zaidan-nine.vercel.app/">
+    <meta property="og:image" content="https://zaidan-nine.vercel.app/gambar2.jpg">
+    <meta property="og:image:width" content="800">
+    <meta property="og:image:height" content="737">
+    <meta property="og:image:alt" content="Muhamad Zaidan Faiz — Pengembang Web Frontend dan UI/UX">
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Zaidan. — Pengembang Web Frontend &amp; UI/UX">
-    <meta name="twitter:description" content="Membangun antarmuka web yang responsif, cepat, dan berfokus pada pengalaman pengguna.">
-    <meta name="twitter:image" content="https://example.com/image/og-cover.jpg">
+    <meta name="twitter:title" content="Zaidan Faiz — Pengembang Web Frontend &amp; UI/UX">
+    <meta name="twitter:description" content="Mengubah desain kompleks menjadi aplikasi web yang cepat, interaktif, dan siap pakai.">
+    <meta name="twitter:image" content="https://zaidan-nine.vercel.app/gambar2.jpg">
 
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="alternate icon" href="favicon-32.png" sizes="32x32">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
-    <!-- Tema ditentukan SEBELUM halaman digambar, supaya tidak ada kedipan
-         gelap bagi pengguna mode terang. Skrip ini harus tetap di dalam head
-         dan tanpa atribut defer. -->
+    <!-- Penentuan Tema & Smart Preloader sebelum render -->
     <script>
         (function () {
             var root = document.documentElement;
@@ -50,13 +46,13 @@
             if (stored === 'dark' || (!stored && prefersDark)) {
                 root.classList.add('dark');
             }
+            try {
+                if (sessionStorage.getItem('zaidan_preloader_shown') === '1') {
+                    root.classList.add('skip-preloader');
+                }
+            } catch (e) { }
         })();
     </script>
-
-    <style>
-        html { background: #ffffff; }
-        html.dark { background: #0e0e0e; }
-    </style>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -67,18 +63,221 @@
     <link rel="stylesheet" href="css/animations.css">
     <link rel="stylesheet" href="css/chat.css">
 
+    <!-- ========================================================
+         UPGRADE UI & ANIMASI KUSTOM (Zero-Build CSS)
+         ======================================================== -->
+    <style id="ui-animation-upgrades">
+        html { background: #ffffff; scroll-behavior: smooth; }
+        html.dark { background: #0e0e0e; }
+
+        /* Lewati preloader jika sudah pernah dibuka di sesi yang sama */
+        html.skip-preloader #preloader {
+            display: none !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
+        /* 1. Cursor Ambient Spotlight */
+        #cursor-spotlight {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, rgba(0, 0, 0, 0.035) 0%, rgba(0, 0, 0, 0) 70%);
+            transition: opacity 0.4s ease;
+            will-change: transform;
+        }
+        html.dark #cursor-spotlight {
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.055) 0%, rgba(255, 255, 255, 0) 70%);
+        }
+        @media (pointer: coarse), (max-width: 768px) {
+            #cursor-spotlight { display: none !important; }
+        }
+
+        /* 2. Shimmering Button Effect */
+        .btn-shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-shimmer::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -120%;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.22),
+                transparent
+            );
+            transform: skewX(-20deg);
+            transition: left 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        html.dark .btn-shimmer::after {
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(0, 0, 0, 0.18),
+                transparent
+            );
+        }
+        .btn-shimmer:hover::after {
+            left: 140%;
+        }
+
+        /* 3. Interactive Skill Row Micro-Interaction */
+        .fx-skill-row {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 16px 12px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 0.5rem;
+            transition: padding-left 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                        background-color 0.3s ease,
+                        border-color 0.3s ease;
+        }
+        html.dark .fx-skill-row {
+            border-bottom-color: rgba(255, 255, 255, 0.08);
+        }
+        .fx-skill-row__name,
+        .fx-skill-row__meta {
+            position: relative;
+            z-index: 2;
+        }
+        .fx-skill-row::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            bottom: auto;
+            transform: translateY(-50%) scaleY(0);
+            width: 3px !important;
+            height: 60%;
+            background: currentColor;
+            border-radius: 99px;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+            z-index: 1;
+        }
+        .fx-skill-row:hover {
+            padding-left: 1.25rem;
+            background-color: rgba(0, 0, 0, 0.035);
+        }
+        html.dark .fx-skill-row:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        .fx-skill-row:hover::before {
+            width: 3px !important;
+            transform: translateY(-50%) scaleY(1);
+        }
+
+        /* Hero Location Badge */
+        .hero-location-badge {
+            background-color: #ffffff;
+            border-color: #e5e7eb;
+            color: #000000;
+        }
+        html.dark .hero-location-badge {
+            background-color: #121212 !important;
+            border-color: #262626 !important;
+            color: #ffffff !important;
+        }
+        html.dark .hero-location-badge .location-title {
+            color: #ffffff !important;
+        }
+
+        /* 4. Project Card Browser Frame & Image Zoom */
+        .project-card-frame {
+            transition: border-color 0.4s ease, box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .project-group:hover .project-card-frame {
+            border-color: rgba(0, 0, 0, 0.35);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+        }
+        html.dark .project-group:hover .project-card-frame {
+            border-color: rgba(255, 255, 255, 0.35);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+        }
+        .project-img-zoom {
+            transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+                        filter 0.65s ease;
+        }
+        .project-group:hover .project-img-zoom {
+            transform: scale(1.055);
+            filter: grayscale(0%);
+        }
+        .project-floating-badge {
+            opacity: 0;
+            transform: translateY(12px) scale(0.95);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .project-group:hover .project-floating-badge {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* 5. Nomor Proyek Outline */
+        .project-number {
+            font-size: clamp(3rem, 5vw, 4.5rem);
+            line-height: 1;
+            font-weight: 900;
+            letter-spacing: -0.05em;
+            -webkit-text-stroke: 1.5px rgba(156, 163, 175, 0.45);
+            color: transparent;
+            user-select: none;
+            transition: -webkit-text-stroke 0.4s ease, transform 0.4s ease;
+        }
+        html.dark .project-number {
+            -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.22);
+        }
+        .project-group:hover .project-number {
+            -webkit-text-stroke: 1.5px rgba(0, 0, 0, 0.85);
+            transform: translateX(4px);
+        }
+        html.dark .project-group:hover .project-number {
+            -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.85);
+        }
+
+        /* 6. Tech Chip Hover Lift */
+        .fx-chip {
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                        border-color 0.25s ease,
+                        background-color 0.25s ease;
+        }
+        .fx-chip:hover {
+            transform: translateY(-3px);
+            border-color: currentColor;
+        }
+
+        /* 7.Marquee Pause on Hover */
+        .fx-marquee-3d:hover .animate-marquee,
+        .fx-marquee-3d:hover .animate-marquee2 {
+            animation-play-state: paused;
+        }
+    </style>
+
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Person",
       "name": "Muhamad Zaidan Faiz",
-      "jobTitle": "Pengembang Web Frontend",
-      "url": "https://example.com/",
-      "image": "https://example.com/image/og-cover.jpg",
+      "jobTitle": "Frontend & Full-Stack Web Developer",
+      "url": "https://zaidan-nine.vercel.app/",
+      "image": "https://zaidan-nine.vercel.app/gambar2.jpg",
       "email": "mailto:zaidanf504@gmail.com",
       "address": { "@type": "PostalAddress", "addressLocality": "Pasuruan", "addressRegion": "Jawa Timur", "addressCountry": "ID" },
       "alumniOf": { "@type": "EducationalOrganization", "name": "SMK Negeri 1 Kota Pasuruan" },
-      "knowsAbout": ["HTML5", "CSS3", "JavaScript", "Tailwind CSS", "Laravel", "Next.js", "Figma", "UI/UX Design"],
+      "knowsAbout": ["HTML5", "CSS3", "JavaScript", "Tailwind CSS", "Laravel", "Next.js", "MySQL", "Supabase", "Figma", "UI/UX Design"],
       "sameAs": [
         "https://github.com/zaidanf504-commits",
         "https://www.instagram.com/jaidanpais/"
@@ -95,8 +294,13 @@
 </head>
 <body class="antialiased selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black bg-white dark:bg-[#0e0e0e] text-black dark:text-white transition-colors duration-300" data-page-label="ZAIDAN.">
 
+    <!-- Cursor Ambient Spotlight -->
+    <div id="cursor-spotlight" aria-hidden="true"></div>
+
+    <!-- Top Reading Progress Bar -->
     <div class="fx-progress" aria-hidden="true"><div class="fx-progress__bar"></div></div>
 
+    <!-- Preloader -->
     <div id="preloader" class="fixed inset-0 z-[100] bg-[#0e0e0e] dark:bg-white flex flex-col items-center justify-center transition-colors duration-300">
         <div class="relative text-5xl sm:text-7xl md:text-9xl font-black tracking-tighter">
             <span class="text-outline opacity-40 select-none">ZAIDAN.</span>
@@ -114,14 +318,16 @@
         </div>
     </div>
 
-    <nav id="navbar" class="fixed w-full top-0 z-50 glass-nav bg-white/80 dark:bg-[#0e0e0e]/80 border-b border-gray-200 dark:border-borderdark transition-all duration-300">
+    <!-- Navbar -->
+    <nav id="navbar" class="fixed w-full top-0 z-50 glass-nav bg-white/80 dark:bg-[#0e0e0e]/80 backdrop-blur-md border-b border-gray-200 dark:border-borderdark transition-all duration-300">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="index.html" aria-label="Beranda Zaidan Faiz" class="bg-black text-white dark:bg-white dark:text-black font-bold text-xl px-3 py-1.5 rounded-sm tracking-tight transition-colors">ZAIDAN</a>
+            <a href="index.html" aria-label="Beranda Zaidan Faiz" class="bg-black text-white dark:bg-white dark:text-black font-bold text-xl px-3 py-1.5 rounded-sm tracking-tight hover:opacity-85 transition-opacity">ZAIDAN</a>
 
             <ul class="hidden md:flex gap-8 items-center font-medium text-sm text-gray-500 dark:text-textmuted">
-                <li><a href="index.html" aria-current="page" class="text-black dark:text-white border-b-2 border-black dark:border-white pb-1 transition-colors">Rumah</a></li>
+                <li><a href="index.html" aria-current="page" class="text-black dark:text-white border-b-2 border-black dark:border-white pb-1 transition-colors">Beranda</a></li>
                 <li><a href="projects.html" class="hover:text-black dark:hover:text-white transition-colors">Proyek</a></li>
                 <li><a href="about.html" class="hover:text-black dark:hover:text-white transition-colors">Tentang</a></li>
+                <li><a href="index.html#contact" class="hover:text-black dark:hover:text-white transition-colors">Kontak</a></li>
             </ul>
 
             <div class="hidden md:flex items-center gap-4 text-sm font-medium">
@@ -130,22 +336,11 @@
                     <i class='bx bx-sun hidden dark:block'></i>
                 </button>
 
-                <!-- Tombol "Unduh CV" sengaja dinonaktifkan sementara karena
-                     belum ada berkas CV di folder ini. Setelah kamu punya
-                     CV-nya, simpan sebagai CV-Muhamad-Zaidan-Faiz.pdf di folder
-                     utama, lalu tukar tombol di bawah ini:
-
-                <a href="CV-Muhamad-Zaidan-Faiz.pdf" download class="fx-magnetic flex items-center gap-2 px-4 py-2.5 rounded-full border border-gray-300 dark:border-borderdark hover:bg-black/5 dark:hover:bg-white/5 transition-all text-gray-600 dark:text-textmuted hover:text-black dark:hover:text-white">
-                    <i class='bx bx-file'></i> Unduh CV
-                </a>
-
-                -->
-
-                <a href="mailto:zaidanf504@gmail.com" class="fx-magnetic flex items-center gap-2 px-4 py-2.5 rounded-full border border-gray-300 dark:border-borderdark hover:bg-black/5 dark:hover:bg-white/5 transition-all text-gray-600 dark:text-textmuted hover:text-black dark:hover:text-white">
+                <a href="mailto:zaidanf504@gmail.com" class="fx-magnetic flex items-center gap-2 px-4 py-2.5 rounded-full border border-gray-300 dark:border-borderdark hover:border-black dark:hover:border-white hover:bg-black/5 dark:hover:bg-white/5 transition-all text-gray-600 dark:text-textmuted hover:text-black dark:hover:text-white">
                     <i class='bx bx-envelope'></i> Email
                 </a>
-                <a href="projects.html" class="fx-magnetic flex items-center gap-2 px-5 py-2.5 rounded-full bg-black text-white dark:bg-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 transition-all">
-                    Karya Saya <i class='bx bx-top-right-arrow'></i>
+                <a href="projects.html" class="fx-magnetic btn-shimmer flex items-center gap-2 px-5 py-2.5 rounded-full bg-black text-white dark:bg-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 transition-all shadow-sm">
+                    Lihat Proyek <i class='bx bx-top-right-arrow'></i>
                 </a>
             </div>
 
@@ -159,18 +354,22 @@
         </div>
     </nav>
 
+    <!-- Mobile Menu Overlay -->
     <div id="mobile-menu" aria-hidden="true" class="fixed inset-0 bg-white dark:bg-[#0e0e0e] z-40 transform translate-y-full transition-transform duration-500 flex flex-col justify-center items-center gap-8 text-2xl font-bold">
         <button id="close-menu" aria-label="Tutup menu navigasi" class="absolute top-6 right-6 text-4xl text-gray-500 dark:text-textmuted"><i class='bx bx-x'></i></button>
-        <a href="index.html" class="mobile-link text-black dark:text-white">Rumah</a>
+        <a href="index.html" class="mobile-link text-black dark:text-white">Beranda</a>
         <a href="projects.html" class="mobile-link text-gray-500 dark:text-textmuted hover:text-black dark:hover:text-white">Proyek</a>
         <a href="about.html" class="mobile-link text-gray-500 dark:text-textmuted hover:text-black dark:hover:text-white">Tentang</a>
         <a href="index.html#contact" class="mobile-link text-gray-500 dark:text-textmuted hover:text-black dark:hover:text-white">Kontak</a>
         <a href="mailto:zaidanf504@gmail.com" class="mobile-link text-gray-500 dark:text-textmuted hover:text-black dark:hover:text-white text-lg font-medium mt-4">zaidanf504@gmail.com</a>
     </div>
 
-    <main>
+    <main class="relative z-10">
 
-    <section id="home" class="relative pt-32 pb-20 md:pt-48 md:pb-32 bg-grid overflow-hidden min-h-screen flex items-center">
+    <!-- ========================================================
+         HERO SECTION
+         ======================================================== -->
+    <section id="home" class="relative pt-32 pb-20 md:pt-44 md:pb-32 bg-grid overflow-hidden min-h-screen flex items-center">
         <div class="absolute top-1/2 left-1/4 -translate-y-1/2 w-[500px] h-[500px] bg-black/5 dark:bg-white/5 rounded-full blur-[100px] pointer-events-none transition-colors duration-300"></div>
 
         <canvas id="fx-hero-canvas" aria-hidden="true"></canvas>
@@ -178,7 +377,7 @@
         <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-12 gap-12 items-center w-full">
             <div class="md:col-span-7 reveal delay-200">
 
-                <div class="flex items-center gap-4 mb-4">
+                <div class="flex items-center gap-4 mb-3">
                     <div class="w-8 h-[1px] bg-black dark:bg-white transition-colors duration-300"></div>
                     <p class="text-lg text-gray-600 dark:text-textmuted">Hai, saya <span class="text-black dark:text-white font-bold">Muhamad Zaidan Faiz.</span></p>
                 </div>
@@ -188,15 +387,17 @@
                 </h1>
 
                 <p class="text-lg md:text-xl text-gray-600 dark:text-textmuted max-w-xl leading-relaxed mb-10 transition-colors duration-300">
-                    Menjembatani kesenjangan antara estetika desain dan fungsionalitas dunia nyata. Saya merancang solusi digital yang responsif, intuitif, dan berfokus pada pengalaman pengguna yang lancar.
+                    Mengubah desain kompleks menjadi aplikasi web yang cepat, interaktif, dan siap pakai. Saya membantu bisnis dan tim membangun produk digital yang tidak hanya estetis, tetapi juga nyaman digunakan dan siap berkembang.
                 </p>
 
                 <div class="flex flex-wrap gap-3 md:gap-4">
-                    <a href="projects.html" class="fx-magnetic px-6 py-3 md:px-8 md:py-4 rounded-full bg-black text-white dark:bg-white dark:text-black font-semibold hover:bg-gray-800 dark:hover:bg-gray-200 transition-all flex items-center justify-center gap-2 shadow-lg text-sm md:text-base w-full sm:w-auto">
-                        Lihat Karya <i class='bx bx-right-arrow-alt text-lg md:text-xl'></i>
+                    <a href="projects.html" class="fx-magnetic btn-shimmer group px-6 py-3.5 md:px-8 md:py-4 rounded-full bg-black text-white dark:bg-white dark:text-black font-semibold hover:bg-gray-800 dark:hover:bg-gray-200 transition-all flex items-center justify-center gap-2 shadow-lg text-sm md:text-base w-full sm:w-auto">
+                        <span>Eksplorasi Proyek</span>
+                        <i class='bx bx-right-arrow-alt text-lg md:text-xl transform group-hover:translate-x-1 transition-transform'></i>
                     </a>
-                    <a href="#contact" class="fx-magnetic px-6 py-3 md:px-8 md:py-4 rounded-full border border-gray-300 dark:border-borderdark bg-transparent text-black dark:text-white font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition-all flex items-center justify-center gap-2 text-sm md:text-base w-full sm:w-auto">
-                        Kontak <i class='bx bx-send text-lg md:text-xl'></i>
+                    <a href="#contact" class="fx-magnetic group px-6 py-3.5 md:px-8 md:py-4 rounded-full border border-gray-300 dark:border-borderdark bg-white/50 dark:bg-transparent backdrop-blur-sm text-black dark:text-white font-semibold hover:border-black dark:hover:border-white hover:bg-black/5 dark:hover:bg-white/5 transition-all flex items-center justify-center gap-2 text-sm md:text-base w-full sm:w-auto">
+                        <span>Mulai Diskusi</span>
+                        <i class='bx bx-send text-lg md:text-xl transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform'></i>
                     </a>
                 </div>
             </div>
@@ -206,7 +407,7 @@
                     <div class="fx-tilt__shadow"></div>
 
                     <div class="fx-tilt__inner">
-                        <div class="fx-tilt__layer relative bg-gray-100 dark:bg-white p-3 pb-24 rounded-2xl shadow-2xl">
+                        <div class="fx-tilt__layer relative bg-gray-100 dark:bg-white p-3 pb-24 rounded-2xl shadow-2xl border border-gray-200/60 dark:border-white/10">
                             <img src="gambar2.jpg" width="800" height="737"
                                  alt="Potret Muhamad Zaidan Faiz"
                                  decoding="async"
@@ -214,18 +415,20 @@
                         </div>
 
                         <div class="fx-tilt__layer absolute bottom-6 left-6 right-6" data-fx-depth="52">
-                            <div class="bg-white dark:bg-bgdark text-black dark:text-white p-4 rounded-xl flex justify-between items-center shadow-xl border border-gray-200 dark:border-borderdark transition-colors duration-300">
+                            <div class="hero-location-badge bg-white dark:bg-carddark text-black dark:text-white p-4 rounded-xl flex justify-between items-center shadow-xl border border-gray-200 dark:border-borderdark transition-colors duration-300">
                                 <div>
                                     <p class="text-[11px] text-gray-500 dark:text-textmuted uppercase tracking-widest font-bold mb-1">Berbasis Di</p>
-                                    <p class="text-sm font-bold">Pasuruan, Jawa Timur</p>
+                                    <p class="location-title text-sm font-bold text-black dark:text-white">Pasuruan, Jawa Timur</p>
                                 </div>
-                                <i class='bx bx-down-arrow-alt rotate-[-135deg] text-xl'></i>
+                                <div class="w-9 h-9 rounded-full bg-gray-100 dark:bg-bgdark flex items-center justify-center text-black dark:text-white border border-gray-200/50 dark:border-borderdark">
+                                    <i class='bx bx-map-pin text-lg'></i>
+                                </div>
                             </div>
                         </div>
 
                         <div class="fx-tilt__layer absolute -top-6 -left-2 sm:-top-10 sm:-left-10 md:top-0 md:-left-16 z-20" data-fx-depth="92">
                             <div class="fx-float-badge">
-                                <div class="bg-black text-white dark:bg-white dark:text-black text-xs font-bold px-4 py-2 rounded-lg shadow-xl flex items-center gap-2 border border-gray-800 dark:border-gray-200 transition-colors duration-300">
+                                <div class="bg-black text-white dark:bg-white dark:text-black text-xs font-bold px-4 py-2.5 rounded-xl shadow-xl flex items-center gap-2 border border-gray-800 dark:border-gray-200 transition-colors duration-300">
                                     <i class='bx bx-code-alt text-lg'></i> Estetika + Logika
                                 </div>
                             </div>
@@ -238,34 +441,40 @@
         </div>
     </section>
 
+    <!-- ========================================================
+         INFINITE TECH MARQUEE (Pause on Hover)
+         ======================================================== -->
     <div class="w-full border-y border-gray-200 dark:border-borderdark bg-gray-50 dark:bg-carddark py-4 flex overflow-hidden whitespace-nowrap relative select-none transition-colors duration-300 fx-marquee-3d">
-        <div class="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-white dark:from-[#0e0e0e] to-transparent z-10 transition-colors duration-300"></div>
-        <div class="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-white dark:from-[#0e0e0e] to-transparent z-10 transition-colors duration-300"></div>
+        <div class="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-white dark:from-[#0e0e0e] to-transparent z-10 transition-colors duration-300 pointer-events-none"></div>
+        <div class="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-white dark:from-[#0e0e0e] to-transparent z-10 transition-colors duration-300 pointer-events-none"></div>
 
         <div class="animate-marquee flex gap-12 items-center text-sm font-bold text-gray-500 dark:text-textmuted tracking-widest px-6">
-            <span class="flex items-center gap-2"><i class='bx bxl-html5 text-xl'></i> HTML5 <span class="text-gray-300 dark:text-borderdark ml-6">&bull;</span></span>
-            <span class="flex items-center gap-2"><i class='bx bxl-css3 text-xl'></i> CSS3 <span class="text-gray-300 dark:text-borderdark ml-6">&bull;</span></span>
-            <span class="flex items-center gap-2"><i class='bx bxl-javascript text-xl'></i> JAVASCRIPT <span class="text-gray-300 dark:text-borderdark ml-6">&bull;</span></span>
-            <span class="flex items-center gap-2"><i class='bx bxl-tailwind-css text-xl'></i> TAILWIND CSS <span class="text-gray-300 dark:text-borderdark ml-6">&bull;</span></span>
-            <span class="flex items-center gap-2"><i class='bx bxl-react text-xl'></i> NEXT.JS <span class="text-gray-300 dark:text-borderdark ml-6">&bull;</span></span>
-            <span class="flex items-center gap-2"><i class='bx bxl-php text-xl'></i> LARAVEL <span class="text-gray-300 dark:text-borderdark ml-6">&bull;</span></span>
-            <span class="flex items-center gap-2"><i class='bx bxs-data text-xl'></i> MYSQL <span class="text-gray-300 dark:text-borderdark ml-6">&bull;</span></span>
-            <span class="flex items-center gap-2"><i class='bx bxl-figma text-xl'></i> FIGMA <span class="text-gray-300 dark:text-borderdark ml-6">&bull;</span></span>
-            <span class="flex items-center gap-2"><i class='bx bxl-git text-xl'></i> GIT</span>
+            <span class="flex items-center gap-2 hover:text-black dark:hover:text-white transition-colors"><i class='bx bxl-html5 text-xl'></i> HTML5 <span class="text-gray-300 dark:text-borderdark ml-6">&bull;</span></span>
+            <span class="flex items-center gap-2 hover:text-black dark:hover:text-white transition-colors"><i class='bx bxl-css3 text-xl'></i> CSS3 <span class="text-gray-300 dark:text-borderdark ml-6">&bull;</span></span>
+            <span class="flex items-center gap-2 hover:text-black dark:hover:text-white transition-colors"><i class='bx bxl-javascript text-xl'></i> JAVASCRIPT <span class="text-gray-300 dark:text-borderdark ml-6">&bull;</span></span>
+            <span class="flex items-center gap-2 hover:text-black dark:hover:text-white transition-colors"><i class='bx bxl-tailwind-css text-xl'></i> TAILWIND CSS <span class="text-gray-300 dark:text-borderdark ml-6">&bull;</span></span>
+            <span class="flex items-center gap-2 hover:text-black dark:hover:text-white transition-colors"><i class='bx bxl-react text-xl'></i> NEXT.JS <span class="text-gray-300 dark:text-borderdark ml-6">&bull;</span></span>
+            <span class="flex items-center gap-2 hover:text-black dark:hover:text-white transition-colors"><i class='bx bxl-php text-xl'></i> LARAVEL <span class="text-gray-300 dark:text-borderdark ml-6">&bull;</span></span>
+            <span class="flex items-center gap-2 hover:text-black dark:hover:text-white transition-colors"><i class='bx bxs-data text-xl'></i> MYSQL <span class="text-gray-300 dark:text-borderdark ml-6">&bull;</span></span>
+            <span class="flex items-center gap-2 hover:text-black dark:hover:text-white transition-colors"><i class='bx bxl-figma text-xl'></i> FIGMA <span class="text-gray-300 dark:text-borderdark ml-6">&bull;</span></span>
+            <span class="flex items-center gap-2 hover:text-black dark:hover:text-white transition-colors"><i class='bx bxl-git text-xl'></i> GIT</span>
         </div>
         <div class="animate-marquee2 absolute top-4 flex gap-12 items-center text-sm font-bold text-gray-500 dark:text-textmuted tracking-widest px-6">
-            <span class="flex items-center gap-2"><i class='bx bxl-html5 text-xl'></i> HTML5 <span class="text-gray-300 dark:text-borderdark ml-6">&bull;</span></span>
-            <span class="flex items-center gap-2"><i class='bx bxl-css3 text-xl'></i> CSS3 <span class="text-gray-300 dark:text-borderdark ml-6">&bull;</span></span>
-            <span class="flex items-center gap-2"><i class='bx bxl-javascript text-xl'></i> JAVASCRIPT <span class="text-gray-300 dark:text-borderdark ml-6">&bull;</span></span>
-            <span class="flex items-center gap-2"><i class='bx bxl-tailwind-css text-xl'></i> TAILWIND CSS <span class="text-gray-300 dark:text-borderdark ml-6">&bull;</span></span>
-            <span class="flex items-center gap-2"><i class='bx bxl-react text-xl'></i> NEXT.JS <span class="text-gray-300 dark:text-borderdark ml-6">&bull;</span></span>
-            <span class="flex items-center gap-2"><i class='bx bxl-php text-xl'></i> LARAVEL <span class="text-gray-300 dark:text-borderdark ml-6">&bull;</span></span>
-            <span class="flex items-center gap-2"><i class='bx bxs-data text-xl'></i> MYSQL <span class="text-gray-300 dark:text-borderdark ml-6">&bull;</span></span>
-            <span class="flex items-center gap-2"><i class='bx bxl-figma text-xl'></i> FIGMA <span class="text-gray-300 dark:text-borderdark ml-6">&bull;</span></span>
-            <span class="flex items-center gap-2"><i class='bx bxl-git text-xl'></i> GIT</span>
+            <span class="flex items-center gap-2 hover:text-black dark:hover:text-white transition-colors"><i class='bx bxl-html5 text-xl'></i> HTML5 <span class="text-gray-300 dark:text-borderdark ml-6">&bull;</span></span>
+            <span class="flex items-center gap-2 hover:text-black dark:hover:text-white transition-colors"><i class='bx bxl-css3 text-xl'></i> CSS3 <span class="text-gray-300 dark:text-borderdark ml-6">&bull;</span></span>
+            <span class="flex items-center gap-2 hover:text-black dark:hover:text-white transition-colors"><i class='bx bxl-javascript text-xl'></i> JAVASCRIPT <span class="text-gray-300 dark:text-borderdark ml-6">&bull;</span></span>
+            <span class="flex items-center gap-2 hover:text-black dark:hover:text-white transition-colors"><i class='bx bxl-tailwind-css text-xl'></i> TAILWIND CSS <span class="text-gray-300 dark:text-borderdark ml-6">&bull;</span></span>
+            <span class="flex items-center gap-2 hover:text-black dark:hover:text-white transition-colors"><i class='bx bxl-react text-xl'></i> NEXT.JS <span class="text-gray-300 dark:text-borderdark ml-6">&bull;</span></span>
+            <span class="flex items-center gap-2 hover:text-black dark:hover:text-white transition-colors"><i class='bx bxl-php text-xl'></i> LARAVEL <span class="text-gray-300 dark:text-borderdark ml-6">&bull;</span></span>
+            <span class="flex items-center gap-2 hover:text-black dark:hover:text-white transition-colors"><i class='bx bxs-data text-xl'></i> MYSQL <span class="text-gray-300 dark:text-borderdark ml-6">&bull;</span></span>
+            <span class="flex items-center gap-2 hover:text-black dark:hover:text-white transition-colors"><i class='bx bxl-figma text-xl'></i> FIGMA <span class="text-gray-300 dark:text-borderdark ml-6">&bull;</span></span>
+            <span class="flex items-center gap-2 hover:text-black dark:hover:text-white transition-colors"><i class='bx bxl-git text-xl'></i> GIT</span>
         </div>
     </div>
 
+    <!-- ========================================================
+         ABOUT SECTION
+         ======================================================== -->
     <section id="about" class="py-20 md:py-32 border-b border-gray-200 dark:border-borderdark transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-6">
             <div class="flex items-center gap-4 mb-12 reveal">
@@ -273,20 +482,38 @@
                 <h3 class="text-sm font-bold tracking-widest text-gray-500 dark:text-textmuted uppercase">Sekilas Tentang Saya</h3>
             </div>
 
-            <div class="grid md:grid-cols-2 gap-10 sm:gap-16 md:gap-24">
+            <div class="grid md:grid-cols-2 gap-10 sm:gap-16 md:gap-24 items-start">
                 <div class="reveal-3d">
-                    <h2 class="text-3xl sm:text-4xl md:text-[3rem] font-bold leading-tight">
-                        Merekayasa masa depan dengan <span class="text-gray-500 dark:text-textmuted">desain</span> dan <span class="text-gray-500 dark:text-textmuted">kode</span>.
+                    <h2 class="text-3xl sm:text-4xl md:text-[3rem] font-bold" style="line-height: 1.22;">
+                        Membangun solusi digital lewat perpaduan <span class="text-gray-500 dark:text-textmuted">desain</span> dan <span class="text-gray-500 dark:text-textmuted">kode</span>.
                     </h2>
                 </div>
 
                 <div class="space-y-6 reveal-3d">
                     <p class="text-xl text-gray-600 dark:text-textmuted leading-relaxed font-light">
-                        Saya adalah seorang siswa di <strong class="text-black dark:text-white font-semibold">SMK Negeri 1 Kota Pasuruan</strong>, jurusan Rekayasa Perangkat Lunak (RPL), dengan fokus pada pengembangan web dan pembuatan antarmuka modern yang tangguh, skalabel, serta memiliki desain yang estetis.
+                        Berfokus pada pengembangan web modern menggunakan ekosistem <strong class="text-black dark:text-white font-semibold">Next.js</strong> dan <strong class="text-black dark:text-white font-semibold">Laravel</strong>. Berangkat dari latar belakang Rekayasa Perangkat Lunak (RPL) di <strong class="text-black dark:text-white font-semibold">SMK Negeri 1 Kota Pasuruan</strong>, saya terbiasa merancang antarmuka yang estetis sekaligus membangun sistem yang rapi, skalabel, dan siap digunakan di dunia nyata.
                     </p>
-                    <div class="pt-6">
-                        <a href="about.html" class="inline-flex items-center gap-2 text-black dark:text-white font-bold hover:text-gray-500 dark:hover:text-textmuted transition-colors">
-                            Baca profil lengkap saya <i class='bx bx-right-arrow-alt text-xl'></i>
+
+                    <!-- Mini Highlight Pills -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2">
+                        <div class="p-4 rounded-2xl bg-gray-50 dark:bg-carddark border border-gray-200 dark:border-borderdark">
+                            <p class="text-2xl font-black text-black dark:text-white">UI/UX</p>
+                            <p class="text-xs text-gray-500 dark:text-textmuted mt-1 font-medium">Desain Responsif &amp; Presisi</p>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-gray-50 dark:bg-carddark border border-gray-200 dark:border-borderdark">
+                            <p class="text-2xl font-black text-black dark:text-white">Full-Stack</p>
+                            <p class="text-xs text-gray-500 dark:text-textmuted mt-1 font-medium">Next.js &amp; Laravel 12</p>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-gray-50 dark:bg-carddark border border-gray-200 dark:border-borderdark col-span-2 sm:col-span-1">
+                            <p class="text-2xl font-black text-black dark:text-white">Clean Code</p>
+                            <p class="text-xs text-gray-500 dark:text-textmuted mt-1 font-medium">Cepat &amp; Mudah Dikelola</p>
+                        </div>
+                    </div>
+
+                    <div class="pt-4">
+                        <a href="about.html" class="group inline-flex items-center gap-2 text-black dark:text-white font-bold hover:text-gray-500 dark:hover:text-textmuted transition-colors">
+                            <span>Kenali perjalanan &amp; profil lengkap saya</span>
+                            <i class='bx bx-right-arrow-alt text-xl transform group-hover:translate-x-1.5 transition-transform'></i>
                         </a>
                     </div>
                 </div>
@@ -294,6 +521,9 @@
         </div>
     </section>
 
+    <!-- ========================================================
+         SKILLS SECTION (Interactive 3D Tech Cube Console)
+         ======================================================== -->
     <section id="skills" class="py-20 md:py-32 border-b border-gray-200 dark:border-borderdark transition-colors duration-300 overflow-hidden">
         <div class="max-w-7xl mx-auto px-6">
             <div class="flex items-center gap-4 mb-12 reveal">
@@ -303,11 +533,11 @@
 
             <div class="grid md:grid-cols-2 gap-12 md:gap-20 items-center">
                 <div class="reveal-3d">
-                    <h2 class="text-3xl sm:text-4xl md:text-[3rem] font-bold leading-tight mb-6">
-                        Alat yang saya pakai<br><span class="text-gray-500 dark:text-textmuted">hampir setiap hari.</span>
+                    <h2 class="text-3xl sm:text-4xl md:text-[3rem] font-bold mb-6" style="line-height: 1.22;">
+                        Teknologi yang saya gunakan<br><span class="text-gray-500 dark:text-textmuted">setiap hari.</span>
                     </h2>
                     <p class="text-lg text-gray-600 dark:text-textmuted leading-relaxed mb-10 max-w-md">
-                        Bukan sekadar daftar, tapi yang benar-benar saya pakai untuk membangun proyek nyata &mdash; dari menyusun tampilan sampai menyambungkannya ke basis data.
+                        Bukan sekadar daftar di atas kertas, melainkan tech stack utama yang saya gunakan untuk membangun proyek dari nol &mdash; mulai dari merancang UI di Figma, menulis kode antarmuka yang responsif, hingga mengelola basis data.
                     </p>
 
                     <div>
@@ -339,177 +569,272 @@
                         <div class="fx-cube-stage">
                             <div class="fx-cube">
                                 <div class="fx-cube__face fx-cube__face--front">
-                                    <i class='bx bx-code-alt'></i>
-                                    <span class="fx-cube__title">Frontend</span>
-                                    <span class="fx-cube__label">HTML &middot; CSS &middot; JS</span>
+                                    <div class="w-10 h-10 rounded-xl bg-black/5 dark:bg-white/10 flex items-center justify-center mb-0.5">
+                                        <i class='bx bx-code-alt text-2xl'></i>
+                                    </div>
+                                    <span class="fx-cube__title text-sm font-bold">Frontend</span>
+                                    <span class="fx-cube__label text-[10px]">HTML &middot; CSS &middot; JS</span>
                                 </div>
                                 <div class="fx-cube__face fx-cube__face--right">
-                                    <i class='bx bx-layer'></i>
-                                    <span class="fx-cube__title">Framework</span>
-                                    <span class="fx-cube__label">Laravel &middot; Next.js</span>
+                                    <div class="w-10 h-10 rounded-xl bg-black/5 dark:bg-white/10 flex items-center justify-center mb-0.5">
+                                        <i class='bx bx-layer text-2xl'></i>
+                                    </div>
+                                    <span class="fx-cube__title text-sm font-bold">Framework</span>
+                                    <span class="fx-cube__label text-[10px]">Laravel &middot; Next.js</span>
                                 </div>
                                 <div class="fx-cube__face fx-cube__face--back">
-                                    <i class='bx bx-data'></i>
-                                    <span class="fx-cube__title">Basis Data</span>
-                                    <span class="fx-cube__label">MySQL &middot; Supabase</span>
+                                    <div class="w-10 h-10 rounded-xl bg-black/5 dark:bg-white/10 flex items-center justify-center mb-0.5">
+                                        <i class='bx bx-data text-2xl'></i>
+                                    </div>
+                                    <span class="fx-cube__title text-sm font-bold">Basis Data</span>
+                                    <span class="fx-cube__label text-[10px]">MySQL &middot; Supabase</span>
                                 </div>
                                 <div class="fx-cube__face fx-cube__face--left">
-                                    <i class='bx bx-pen'></i>
-                                    <span class="fx-cube__title">Desain</span>
-                                    <span class="fx-cube__label">Figma &middot; UI/UX</span>
+                                    <div class="w-10 h-10 rounded-xl bg-black/5 dark:bg-white/10 flex items-center justify-center mb-0.5">
+                                        <i class='bx bx-pen text-2xl'></i>
+                                    </div>
+                                    <span class="fx-cube__title text-sm font-bold">Desain</span>
+                                    <span class="fx-cube__label text-[10px]">Figma &middot; UI/UX</span>
                                 </div>
                                 <div class="fx-cube__face fx-cube__face--top">
-                                    <i class='bx bx-git-branch'></i>
-                                    <span class="fx-cube__title">Alur Kerja</span>
-                                    <span class="fx-cube__label">Git &middot; GitHub</span>
+                                    <div class="w-10 h-10 rounded-xl bg-black/5 dark:bg-white/10 flex items-center justify-center mb-0.5">
+                                        <i class='bx bx-git-branch text-2xl'></i>
+                                    </div>
+                                    <span class="fx-cube__title text-sm font-bold">Alur Kerja</span>
+                                    <span class="fx-cube__label text-[10px]">Git &middot; GitHub</span>
                                 </div>
                                 <div class="fx-cube__face fx-cube__face--bottom">
-                                    <span class="text-2xl font-black tracking-tighter">ZAIDAN.</span>
-                                    <span class="fx-cube__label">Pasuruan, ID</span>
+                                    <span class="text-xl font-black tracking-tighter">ZAIDAN.</span>
+                                    <span class="fx-cube__label text-[10px]">Pasuruan, ID</span>
                                 </div>
                             </div>
                         </div>
                         <div class="fx-cube-shadow"></div>
                     </div>
 
-                    <p class="fx-cube-hint"><i class='bx bx-move text-base'></i> Geser kubusnya untuk memutar</p>
+                    <!-- Interactive Face Selector Buttons -->
+                    <div class="fx-cube-controls flex flex-wrap justify-center gap-1.5 mt-2 max-w-md">
+                        <button type="button" data-fx-face="front" class="fx-cube-btn active">
+                            ⚡ Frontend
+                        </button>
+                        <button type="button" data-fx-face="right" class="fx-cube-btn">
+                            ⚙️ Framework
+                        </button>
+                        <button type="button" data-fx-face="back" class="fx-cube-btn">
+                            🗄️ Database
+                        </button>
+                        <button type="button" data-fx-face="left" class="fx-cube-btn">
+                            🎨 Desain
+                        </button>
+                        <button type="button" data-fx-face="top" class="fx-cube-btn">
+                            🌿 Git
+                        </button>
+                    </div>
+
+                    <!-- Live 3D Rotation Telemetry -->
+                    <div class="fx-cube-telemetry mt-3 text-[11px] font-mono font-bold tracking-widest uppercase text-gray-500 dark:text-textmuted flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span id="fx-cube-coords">ROTASI 3D: -16° X / -32° Y</span>
+                        <span class="text-gray-300 dark:text-borderdark">&bull;</span>
+                        <span class="text-[10px] tracking-normal font-sans text-gray-400">Drag Untuk Putar</span>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- ========================================================
+         PROJECTS SECTION (Browser Frame + Smooth Hover Zoom)
+         ======================================================== -->
     <section id="projects" class="py-20 md:py-32 border-b border-gray-200 dark:border-borderdark transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-6">
-            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-8 mb-16 md:mb-20 reveal">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-8 mb-16 md:mb-24 reveal">
                 <div>
-                    <h3 class="text-sm font-bold tracking-widest text-gray-500 dark:text-textmuted uppercase mb-2 md:mb-4">Karya Pilihan</h3>
+                    <div class="flex items-center gap-4 mb-3">
+                        <div class="w-8 h-[1px] bg-gray-400 dark:bg-textmuted"></div>
+                        <h3 class="text-sm font-bold tracking-widest text-gray-500 dark:text-textmuted uppercase">Karya Pilihan</h3>
+                    </div>
                     <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight max-w-xl">
-                        Produk digital yang dibuat dengan presisi.
+                        Solusi nyata yang dirancang dari nol hingga siap rilis.
                     </h2>
                 </div>
-                <a href="projects.html" class="fx-magnetic inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-gray-300 dark:border-borderdark text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all font-bold text-sm shadow-sm w-full md:w-auto">
-                    Lihat Semua Arsip <i class='bx bx-right-arrow-alt text-lg'></i>
+                <a href="projects.html" class="fx-magnetic group inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full border border-gray-300 dark:border-borderdark text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all font-bold text-sm shadow-sm w-full md:w-auto">
+                    <span>Lihat Semua Proyek</span>
+                    <i class='bx bx-right-arrow-alt text-lg transform group-hover:translate-x-1 transition-transform'></i>
                 </a>
             </div>
 
-            <div class="space-y-20 md:space-y-32">
-                <div class="grid md:grid-cols-12 gap-8 md:gap-12 items-center reveal-3d">
+            <div class="space-y-24 md:space-y-36">
+                <!-- PROYEK 01: ZiFood -->
+                <div class="project-group grid md:grid-cols-12 gap-8 md:gap-12 items-center reveal-3d">
                     <div class="md:col-span-7">
-                        <div class="fx-tilt" data-fx-tilt="9">
-                            <div class="fx-tilt__inner">
-                                <div class="fx-tilt__layer overflow-hidden rounded-2xl border border-gray-200 dark:border-borderdark shadow-md">
-                                    <div class="h-[250px] sm:h-[300px] md:h-[400px] w-full bg-gray-100 dark:bg-carddark relative">
-                                        <img src="image/zifood.webp" width="1400" height="680"
-                                             alt="Tangkapan layar platform pemesanan makanan ZiFood"
-                                             loading="lazy" decoding="async"
-                                             class="absolute inset-0 w-full h-full object-cover object-top grayscale hover:grayscale-0 transition-all duration-700">
+                        <a href="projects/ecommerce.html" aria-label="Baca studi kasus ZiFood" class="block focus:outline-none">
+                            <div class="fx-tilt" data-fx-tilt="9">
+                                <div class="fx-tilt__inner">
+                                    <div class="fx-tilt__layer project-card-frame overflow-hidden rounded-2xl border border-gray-200 dark:border-borderdark bg-white dark:bg-carddark shadow-md" data-fx-depth="16">
+                                        <!-- Browser Window Header -->
+                                        <div class="px-4 py-2.5 bg-gray-100 dark:bg-[#161616] border-b border-gray-200 dark:border-borderdark flex items-center justify-between" data-fx-depth="30">
+                                            <div class="flex items-center gap-1.5">
+                                                <span class="w-2.5 h-2.5 rounded-full bg-red-400/80"></span>
+                                                <span class="w-2.5 h-2.5 rounded-full bg-amber-400/80"></span>
+                                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400/80"></span>
+                                            </div>
+                                            <span class="text-[11px] font-mono text-gray-400 dark:text-textmuted truncate">zifood-umkm.app</span>
+                                            <i class='bx bx-link-external text-xs text-gray-400'></i>
+                                        </div>
+
+                                        <!-- Project Image Container -->
+                                        <div class="h-[240px] sm:h-[300px] md:h-[380px] w-full bg-gray-100 dark:bg-carddark relative overflow-hidden" data-fx-depth="20">
+                                            <img src="image/zifood.webp" width="1400" height="680"
+                                                 alt="Tangkapan layar platform pemesanan makanan ZiFood"
+                                                 loading="lazy" decoding="async"
+                                                 class="project-img-zoom absolute inset-0 w-full h-full object-cover object-top grayscale">
+
+                                            <!-- Floating Hover Overlay Badge -->
+                                            <div class="absolute inset-0 bg-black/25 dark:bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center" data-fx-depth="52">
+                                                <span class="project-floating-badge px-5 py-2.5 rounded-full bg-white text-black font-bold text-xs uppercase tracking-widest shadow-xl flex items-center gap-2">
+                                                    Baca Studi Kasus <i class='bx bx-top-right-arrow text-sm'></i>
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
+                                    <div class="fx-tilt__glare rounded-2xl"></div>
                                 </div>
-                                <div class="fx-tilt__glare rounded-2xl"></div>
                             </div>
-                        </div>
+                        </a>
                     </div>
 
-                    <div class="md:col-span-5 space-y-4 md:space-y-6">
+                    <div class="md:col-span-5 space-y-4 md:space-y-5">
+                        <div class="flex items-center justify-between">
+                            <span class="project-number" data-fx-parallax-x="0.35">01</span>
+                            <span class="text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-gray-100 dark:bg-carddark text-gray-600 dark:text-textmuted border border-gray-200 dark:border-borderdark">E-Commerce UMKM</span>
+                        </div>
                         <h3 class="text-2xl sm:text-3xl font-bold">ZiFood &mdash; Platform Pesanan UMKM</h3>
-                        <p class="text-gray-600 dark:text-textmuted text-lg leading-relaxed">
-                            Sebuah platform belanja online responsif yang menyediakan manajemen produk dinamis, keranjang belanja interaktif, dan alur checkout yang mulus untuk meningkatkan konversi penjualan UMKM.
+                        <p class="text-gray-600 dark:text-textmuted text-base sm:text-lg leading-relaxed">
+                            Membantu UMKM kuliner mendigitalkan proses pemesanan. Dilengkapi manajemen katalog dinamis, keranjang belanja interaktif, dan alur checkout ringkas yang dirancang untuk memangkas hambatan transaksi pelanggan.
                         </p>
                         <div class="flex flex-wrap gap-2 pt-2">
-                            <span class="fx-chip px-3 py-1 bg-white dark:bg-carddark border border-gray-200 dark:border-borderdark rounded-md text-xs font-bold text-gray-600 dark:text-textmuted shadow-sm">Laravel 12</span>
-                            <span class="fx-chip px-3 py-1 bg-white dark:bg-carddark border border-gray-200 dark:border-borderdark rounded-md text-xs font-bold text-gray-600 dark:text-textmuted shadow-sm">TailwindCSS</span>
-                            <span class="fx-chip px-3 py-1 bg-white dark:bg-carddark border border-gray-200 dark:border-borderdark rounded-md text-xs font-bold text-gray-600 dark:text-textmuted shadow-sm">MySQL</span>
+                            <span class="fx-chip px-3 py-1.5 bg-white dark:bg-carddark border border-gray-200 dark:border-borderdark rounded-lg text-xs font-bold text-gray-700 dark:text-gray-300 shadow-sm">Laravel 12</span>
+                            <span class="fx-chip px-3 py-1.5 bg-white dark:bg-carddark border border-gray-200 dark:border-borderdark rounded-lg text-xs font-bold text-gray-700 dark:text-gray-300 shadow-sm">TailwindCSS</span>
+                            <span class="fx-chip px-3 py-1.5 bg-white dark:bg-carddark border border-gray-200 dark:border-borderdark rounded-lg text-xs font-bold text-gray-700 dark:text-gray-300 shadow-sm">MySQL</span>
                         </div>
-                        <div class="pt-6">
-                            <a href="projects/ecommerce.html" class="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-black dark:text-white hover:text-gray-500 dark:hover:text-textmuted transition-colors">
-                                LIHAT STUDI KASUS <i class='bx bx-top-right-arrow'></i>
+                        <div class="pt-4">
+                            <a href="projects/ecommerce.html" class="group inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-black dark:text-white hover:text-gray-500 dark:hover:text-textmuted transition-colors">
+                                <span>BACA STUDI KASUS</span>
+                                <i class='bx bx-top-right-arrow text-base transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform'></i>
                             </a>
                         </div>
                     </div>
                 </div>
 
-                <div class="grid md:grid-cols-12 gap-8 md:gap-12 items-center reveal-3d">
-                    <div class="md:col-span-5 space-y-4 md:space-y-6 order-2 md:order-1">
+                <!-- PROYEK 02: Jurnal PKL -->
+                <div class="project-group grid md:grid-cols-12 gap-8 md:gap-12 items-center reveal-3d">
+                    <div class="md:col-span-5 space-y-4 md:space-y-5 order-2 md:order-1">
+                        <div class="flex items-center justify-between">
+                            <span class="project-number" data-fx-parallax-x="0.35">02</span>
+                            <span class="text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-gray-100 dark:bg-carddark text-gray-600 dark:text-textmuted border border-gray-200 dark:border-borderdark">EdTech &amp; SaaS</span>
+                        </div>
                         <h3 class="text-2xl sm:text-3xl font-bold">Jurnal PKL &mdash; Sistem Laporan Magang</h3>
-                        <p class="text-gray-600 dark:text-textmuted text-lg leading-relaxed">
-                            Aplikasi manajemen logbook magang secara real-time yang memfasilitasi komunikasi dan pelaporan antara siswa, guru pembimbing, dan pihak industri dengan sistem autentikasi multi-level.
+                        <p class="text-gray-600 dark:text-textmuted text-base sm:text-lg leading-relaxed">
+                            Mendigitalkan pemantauan magang sekolah secara real-time. Menghubungkan siswa, guru pembimbing, dan mitra industri dalam satu dasbor terpadu dengan sistem hak akses berlapis (multi-role) dan rekapitulasi otomatis.
                         </p>
                         <div class="flex flex-wrap gap-2 pt-2">
-                            <span class="fx-chip px-3 py-1 bg-white dark:bg-carddark border border-gray-200 dark:border-borderdark rounded-md text-xs font-bold text-gray-600 dark:text-textmuted shadow-sm">Next.js</span>
-                            <span class="fx-chip px-3 py-1 bg-white dark:bg-carddark border border-gray-200 dark:border-borderdark rounded-md text-xs font-bold text-gray-600 dark:text-textmuted shadow-sm">Supabase</span>
-                            <span class="fx-chip px-3 py-1 bg-white dark:bg-carddark border border-gray-200 dark:border-borderdark rounded-md text-xs font-bold text-gray-600 dark:text-textmuted shadow-sm">UI/UX</span>
+                            <span class="fx-chip px-3 py-1.5 bg-white dark:bg-carddark border border-gray-200 dark:border-borderdark rounded-lg text-xs font-bold text-gray-700 dark:text-gray-300 shadow-sm">Next.js</span>
+                            <span class="fx-chip px-3 py-1.5 bg-white dark:bg-carddark border border-gray-200 dark:border-borderdark rounded-lg text-xs font-bold text-gray-700 dark:text-gray-300 shadow-sm">Supabase</span>
+                            <span class="fx-chip px-3 py-1.5 bg-white dark:bg-carddark border border-gray-200 dark:border-borderdark rounded-lg text-xs font-bold text-gray-700 dark:text-gray-300 shadow-sm">UI/UX</span>
                         </div>
-                        <div class="pt-6">
-                            <a href="projects/jurnal-pkl.html" class="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-black dark:text-white hover:text-gray-500 dark:hover:text-textmuted transition-colors">
-                                LIHAT STUDI KASUS <i class='bx bx-top-right-arrow'></i>
+                        <div class="pt-4">
+                            <a href="projects/jurnal-pkl.html" class="group inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-black dark:text-white hover:text-gray-500 dark:hover:text-textmuted transition-colors">
+                                <span>BACA STUDI KASUS</span>
+                                <i class='bx bx-top-right-arrow text-base transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform'></i>
                             </a>
                         </div>
                     </div>
+
                     <div class="md:col-span-7 order-1 md:order-2">
-                        <div class="fx-tilt" data-fx-tilt="9">
-                            <div class="fx-tilt__inner">
-                                <div class="fx-tilt__layer overflow-hidden rounded-2xl border border-gray-200 dark:border-borderdark shadow-md">
-                                    <div class="h-[250px] sm:h-[300px] md:h-[400px] w-full bg-gray-100 dark:bg-carddark relative">
-                                        <img src="image/magang.webp" width="1400" height="669"
-                                             alt="Tangkapan layar aplikasi Jurnal PKL"
-                                             loading="lazy" decoding="async"
-                                             class="absolute inset-0 w-full h-full object-cover object-top grayscale hover:grayscale-0 transition-all duration-700">
+                        <a href="projects/jurnal-pkl.html" aria-label="Baca studi kasus Jurnal PKL" class="block focus:outline-none">
+                            <div class="fx-tilt" data-fx-tilt="9">
+                                <div class="fx-tilt__inner">
+                                    <div class="fx-tilt__layer project-card-frame overflow-hidden rounded-2xl border border-gray-200 dark:border-borderdark bg-white dark:bg-carddark shadow-md" data-fx-depth="16">
+                                        <!-- Browser Window Header -->
+                                        <div class="px-4 py-2.5 bg-gray-100 dark:bg-[#161616] border-b border-gray-200 dark:border-borderdark flex items-center justify-between" data-fx-depth="30">
+                                            <div class="flex items-center gap-1.5">
+                                                <span class="w-2.5 h-2.5 rounded-full bg-red-400/80"></span>
+                                                <span class="w-2.5 h-2.5 rounded-full bg-amber-400/80"></span>
+                                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400/80"></span>
+                                            </div>
+                                            <span class="text-[11px] font-mono text-gray-400 dark:text-textmuted truncate">jurnal-pkl.vercel.app</span>
+                                            <i class='bx bx-link-external text-xs text-gray-400'></i>
+                                        </div>
+
+                                        <!-- Project Image Container -->
+                                        <div class="h-[240px] sm:h-[300px] md:h-[380px] w-full bg-gray-100 dark:bg-carddark relative overflow-hidden" data-fx-depth="20">
+                                            <img src="image/magang.webp" width="1400" height="669"
+                                                 alt="Tangkapan layar aplikasi Jurnal PKL"
+                                                 loading="lazy" decoding="async"
+                                                 class="project-img-zoom absolute inset-0 w-full h-full object-cover object-top grayscale">
+
+                                            <!-- Floating Hover Overlay Badge -->
+                                            <div class="absolute inset-0 bg-black/25 dark:bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center" data-fx-depth="52">
+                                                <span class="project-floating-badge px-5 py-2.5 rounded-full bg-white text-black font-bold text-xs uppercase tracking-widest shadow-xl flex items-center gap-2">
+                                                    Baca Studi Kasus <i class='bx bx-top-right-arrow text-sm'></i>
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
+                                    <div class="fx-tilt__glare rounded-2xl"></div>
                                 </div>
-                                <div class="fx-tilt__glare rounded-2xl"></div>
                             </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- ========================================================
+         CONTACT SECTION
+         ======================================================== -->
     <section id="contact" class="py-20 md:py-32">
         <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 md:gap-24 items-center">
             <div class="reveal-3d">
                 <div class="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-gray-100 dark:bg-carddark border border-gray-200 dark:border-borderdark mb-6 md:mb-8 transition-colors duration-300">
-                    <i class='bx bxs-hand text-xl text-yellow-500'></i>
-                    <span class="text-sm font-bold tracking-widest uppercase text-gray-600 dark:text-textmuted">Sapa</span>
+                    <i class='bx bxs-hand text-xl text-yellow-500 animate-bounce'></i>
+                    <span class="text-sm font-bold tracking-widest uppercase text-gray-600 dark:text-textmuted">Kolaborasi</span>
                 </div>
 
                 <h2 class="text-4xl sm:text-5xl md:text-[4rem] font-black leading-[1.1] mb-6 md:mb-8">
-                    Punya ide?<br>
-                    <span class="text-gray-500 dark:text-textmuted">Mari kita wujudkan.</span>
+                    Punya ide proyek?<br>
+                    <span class="text-gray-500 dark:text-textmuted">Mari wujudkan bersama.</span>
                 </h2>
 
                 <p class="text-lg text-gray-600 dark:text-textmuted leading-relaxed mb-8 md:mb-10 max-w-md">
-                    Saat ini saya tersedia untuk pekerjaan lepas, kolaborasi proyek, atau sekadar berbagi insight web development. Jika Anda memiliki proyek yang membutuhkan sentuhan kreatif, saya ingin sekali mendengarnya.
+                    Saat ini saya terbuka untuk proyek freelance (pembuatan web profil bisnis, landing page, maupun aplikasi web kustom), peluang magang, serta kolaborasi tim. Ceritakan kebutuhan Anda, dan mari kita diskusikan solusi terbaiknya.
                 </p>
 
                 <div class="flex flex-wrap gap-3 md:gap-4">
-                    <a href="https://github.com/zaidanf504-commits" target="_blank" rel="noopener" class="fx-magnetic px-6 py-3 md:py-4 rounded-xl border border-gray-300 dark:border-borderdark bg-transparent font-bold text-black dark:text-white hover:bg-gray-100 dark:hover:bg-carddark transition-all flex items-center justify-center gap-3 w-full sm:w-fit text-sm md:text-base">
+                    <a href="https://github.com/zaidanf504-commits" target="_blank" rel="noopener" class="fx-magnetic px-6 py-3 md:py-4 rounded-xl border border-gray-300 dark:border-borderdark bg-transparent font-bold text-black dark:text-white hover:border-black dark:hover:border-white hover:bg-gray-100 dark:hover:bg-carddark transition-all flex items-center justify-center gap-3 w-full sm:w-fit text-sm md:text-base">
                         <i class='bx bxl-github text-lg md:text-xl'></i> GitHub
                     </a>
-                    <a href="https://www.instagram.com/jaidanpais/" target="_blank" rel="noopener" class="fx-magnetic px-6 py-3 md:py-4 rounded-xl border border-gray-300 dark:border-borderdark bg-transparent font-bold text-black dark:text-white hover:bg-gray-100 dark:hover:bg-carddark transition-all flex items-center justify-center gap-3 w-full sm:w-fit text-sm md:text-base">
+                    <a href="https://www.instagram.com/jaidanpais/" target="_blank" rel="noopener" class="fx-magnetic px-6 py-3 md:py-4 rounded-xl border border-gray-300 dark:border-borderdark bg-transparent font-bold text-black dark:text-white hover:border-black dark:hover:border-white hover:bg-gray-100 dark:hover:bg-carddark transition-all flex items-center justify-center gap-3 w-full sm:w-fit text-sm md:text-base">
                         <i class='bx bxl-instagram text-lg md:text-xl'></i> Instagram
                     </a>
-                    <a href="https://www.facebook.com/profile.php?id=100085864167154" target="_blank" rel="noopener" class="fx-magnetic px-6 py-3 md:py-4 rounded-xl border border-gray-300 dark:border-borderdark bg-transparent font-bold text-black dark:text-white hover:bg-gray-100 dark:hover:bg-carddark transition-all flex items-center justify-center gap-3 w-full sm:w-fit text-sm md:text-base">
+                    <a href="https://www.facebook.com/profile.php?id=100085864167154" target="_blank" rel="noopener" class="fx-magnetic px-6 py-3 md:py-4 rounded-xl border border-gray-300 dark:border-borderdark bg-transparent font-bold text-black dark:text-white hover:border-black dark:hover:border-white hover:bg-gray-100 dark:hover:bg-carddark transition-all flex items-center justify-center gap-3 w-full sm:w-fit text-sm md:text-base">
                         <i class='bx bxl-facebook text-lg md:text-xl'></i> Facebook
                     </a>
                 </div>
             </div>
 
-            <!-- ========================================================
-                 KOLOM KANAN: Live Chat CTA + Email Card
-                 ======================================================== -->
+            <!-- KOLOM KANAN: Live Chat CTA + Email Card -->
             <div class="reveal-3d space-y-6">
 
-                
                 <!-- CARD 1: Live Chat -->
-                <div class="relative bg-white dark:bg-carddark border border-gray-200 dark:border-borderdark p-6 sm:p-8 md:p-10 rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group">
+                <div class="relative bg-white dark:bg-carddark border border-gray-200 dark:border-borderdark hover:border-gray-400 dark:hover:border-gray-600 p-6 sm:p-8 md:p-10 rounded-3xl shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden group">
                     
-                    <!-- Background ambient subtle glow -->
                     <div class="absolute -top-16 -right-16 w-56 h-56 rounded-full pointer-events-none bg-emerald-500/5 dark:bg-emerald-500/10 blur-3xl transition-opacity duration-500"></div>
                     <div class="absolute -bottom-16 -left-16 w-48 h-48 rounded-full pointer-events-none bg-black/5 dark:bg-white/5 blur-3xl transition-opacity duration-500"></div>
 
                     <div class="relative z-10">
-                        <!-- Header badges -->
                         <div class="flex items-center justify-between mb-6 flex-wrap gap-2">
                             <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-black tracking-widest uppercase bg-gray-100 dark:bg-bgdark border border-gray-300 dark:border-borderdark text-gray-700 dark:text-gray-300 transition-colors">
                                 <i class='bx bx-message-dots text-xs text-black dark:text-white'></i>
@@ -521,18 +846,15 @@
                             </div>
                         </div>
 
-                        <!-- Title -->
                         <h3 class="text-2xl sm:text-3xl font-black mb-3 leading-tight text-black dark:text-white transition-colors">
                             Butuh respon cepat?<br>
                             <span class="text-gray-500 dark:text-textmuted">Chat langsung dengan saya.</span>
                         </h3>
 
-                        <!-- Description -->
                         <p class="text-gray-600 dark:text-textmuted leading-relaxed mb-6 max-w-md text-sm sm:text-base transition-colors">
                             Tanya soal proyek, kolaborasi, atau konsultasi gratis. Biasanya saya balas dalam <strong class="text-black dark:text-white font-semibold">1-2 jam</strong>.
                         </p>
 
-                        <!-- Features list -->
                         <ul class="space-y-3 mb-8">
                             <li class="flex items-center gap-3 text-sm text-gray-700 dark:text-gray-300">
                                 <span class="w-6 h-6 rounded-full flex items-center justify-center shrink-0 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
@@ -544,35 +866,34 @@
                                 <span class="w-6 h-6 rounded-full flex items-center justify-center shrink-0 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
                                     <i class='bx bx-check text-base'></i>
                                 </span>
-                                <span>Gratis, tanpa komitmen</span>
+                                <span>Konsultasi awal gratis &amp; tanpa komitmen</span>
                             </li>
                             <li class="flex items-center gap-3 text-sm text-gray-700 dark:text-gray-300">
                                 <span class="w-6 h-6 rounded-full flex items-center justify-center shrink-0 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
                                     <i class='bx bx-check text-base'></i>
                                 </span>
-                                <span>Riwayat chat tersimpan</span>
+                                <span>Riwayat chat tersimpan otomatis</span>
                             </li>
                         </ul>
 
-                        <!-- CTA Button -->
                         <a href="chat.html"
-                           class="fx-magnetic inline-flex items-center gap-3 px-6 sm:px-8 py-4 bg-black text-white dark:bg-white dark:text-black font-bold rounded-2xl hover:bg-gray-800 dark:hover:bg-gray-200 shadow-md hover:shadow-xl transition-all w-full sm:w-auto justify-center group/btn text-sm sm:text-base">
+                           class="fx-magnetic btn-shimmer inline-flex items-center gap-3 px-6 sm:px-8 py-4 bg-black text-white dark:bg-white dark:text-black font-bold rounded-2xl hover:bg-gray-800 dark:hover:bg-gray-200 shadow-md hover:shadow-xl transition-all w-full sm:w-auto justify-center group/btn text-sm sm:text-base">
                             <i class='bx bx-message-rounded-dots text-xl'></i>
                             <span>Mulai Chat Sekarang</span>
                             <i class='bx bx-right-arrow-alt text-xl group-hover/btn:translate-x-1.5 transition-transform'></i>
                         </a>
 
-                        <!-- Small print -->
                         <p class="text-gray-500 dark:text-textmuted text-xs mt-5 flex items-center gap-2">
                             <i class='bx bx-lock-alt text-sm'></i>
                             Percakapan bersifat privat &amp; aman
                         </p>
                     </div>
                 </div>
-                <!-- CARD 2: Email (existing) -->
+
+                <!-- CARD 2: Email -->
                 <div class="bg-gray-50 dark:bg-carddark border border-gray-200 dark:border-borderdark p-6 sm:p-8 md:p-10 rounded-3xl shadow-sm transition-colors duration-300">
                     <h3 class="text-2xl font-bold mb-2">Atau kirim email</h3>
-                    <p class="text-gray-500 dark:text-textmuted mb-8">Kalau lebih nyaman lewat email, saya juga aktif di sana.</p>
+                    <p class="text-gray-500 dark:text-textmuted mb-8">Kalau lebih nyaman berdiskusi via email, saya juga aktif setiap hari di sana.</p>
 
                     <a href="mailto:zaidanf504@gmail.com" class="flex items-center justify-between p-4 md:p-5 bg-white dark:bg-bgdark border border-gray-200 dark:border-borderdark rounded-xl hover:border-black dark:hover:border-white transition-colors group mb-6 shadow-sm overflow-hidden">
                         <div class="flex items-center gap-3 md:gap-4 truncate">
@@ -585,7 +906,7 @@
                     </a>
 
                     <button id="copyEmailBtn" aria-label="Salin alamat email zaidanf504@gmail.com ke papan klip" class="flex items-center gap-2 text-gray-500 dark:text-textmuted hover:text-black dark:hover:text-white transition-colors w-full justify-between">
-                        <span class="flex items-center gap-2 font-semibold"><i class='bx bx-copy'></i> Salin alamat</span>
+                        <span class="flex items-center gap-2 font-semibold"><i class='bx bx-copy'></i> Salin alamat email</span>
                         <span class="text-xs tracking-widest font-bold uppercase">Klik Untuk Menyalin</span>
                     </button>
                 </div>
@@ -596,8 +917,11 @@
 
     </main>
 
-    <footer class="border-t border-gray-200 dark:border-borderdark bg-grid relative pt-20 pb-10 transition-colors duration-300">
-        <button id="backToTop" aria-label="Kembali ke atas halaman" class="absolute -top-6 left-1/2 -translate-x-1/2 flex items-center gap-2 px-6 py-3 rounded-full bg-white dark:bg-carddark border border-gray-300 dark:border-borderdark text-sm font-bold text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black shadow-md transition-all">
+    <!-- ========================================================
+         FOOTER
+         ======================================================== -->
+    <footer class="border-t border-gray-200 dark:border-borderdark bg-grid relative pt-20 pb-10 transition-colors duration-300 z-10">
+        <button id="backToTop" aria-label="Kembali ke atas halaman" class="fx-magnetic absolute -top-6 left-1/2 -translate-x-1/2 flex items-center gap-2 px-6 py-3 rounded-full bg-white dark:bg-carddark border border-gray-300 dark:border-borderdark text-sm font-bold text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black shadow-md transition-all">
             <i class='bx bx-chevron-up text-lg'></i> Kembali ke atas
         </button>
 
@@ -612,16 +936,16 @@
             </div>
 
             <div class="md:col-span-3">
-                <h4 class="text-xs font-bold tracking-widest text-black dark:text-white uppercase mb-6">Mengeksplorasi</h4>
+                <h4 class="text-xs font-bold tracking-widest text-black dark:text-white uppercase mb-6">Navigasi</h4>
                 <ul class="space-y-4 text-gray-500 dark:text-textmuted font-semibold text-sm">
-                    <li><a href="index.html" class="hover:text-black dark:hover:text-white transition-colors">Rumah</a></li>
+                    <li><a href="index.html" class="hover:text-black dark:hover:text-white transition-colors">Beranda</a></li>
                     <li><a href="projects.html" class="hover:text-black dark:hover:text-white transition-colors">Proyek</a></li>
                     <li><a href="about.html" class="hover:text-black dark:hover:text-white transition-colors">Tentang Saya</a></li>
                 </ul>
             </div>
 
             <div class="md:col-span-3">
-                <h4 class="text-xs font-bold tracking-widest text-black dark:text-white uppercase mb-6">Menghubungkan</h4>
+                <h4 class="text-xs font-bold tracking-widest text-black dark:text-white uppercase mb-6">Terhubung</h4>
                 <ul class="space-y-4 text-gray-500 dark:text-textmuted font-semibold text-sm">
                     <li><a href="https://www.instagram.com/jaidanpais/" target="_blank" rel="noopener" class="hover:text-black dark:hover:text-white transition-colors flex items-center gap-2"><i class='bx bxl-instagram text-lg'></i> Instagram</a></li>
                     <li><a href="https://github.com/zaidanf504-commits" target="_blank" rel="noopener" class="hover:text-black dark:hover:text-white transition-colors flex items-center gap-2"><i class='bx bxl-github text-lg'></i> GitHub</a></li>
@@ -631,14 +955,49 @@
         </div>
     </footer>
 
+    <!-- Script Utama Bawaan -->
     <script src="js/main.js"></script>
     <script src="js/animations.js"></script>
 
+    <!-- Script Interaktif Tambahan (Cursor Spotlight & Smart Preloader) -->
+    <script id="ui-interactive-upgrades">
+        (function () {
+            // Simpan flag sessionStorage setelah preloader selesai agar navigasi antar halaman lebih cepat
+            try {
+                window.addEventListener('load', function () {
+                    sessionStorage.setItem('zaidan_preloader_shown', '1');
+                });
+            } catch (e) {}
+
+            // Efek Cursor Spotlight Halus
+            var spotlight = document.getElementById('cursor-spotlight');
+            if (spotlight && window.matchMedia('(pointer: fine)').matches) {
+                var mouseX = window.innerWidth / 2;
+                var mouseY = window.innerHeight / 2;
+                var currentX = mouseX;
+                var currentY = mouseY;
+
+                window.addEventListener('mousemove', function (e) {
+                    mouseX = e.clientX;
+                    mouseY = e.clientY;
+                }, { passive: true });
+
+                function renderSpotlight() {
+                    currentX += (mouseX - currentX) * 0.12;
+                    currentY += (mouseY - currentY) * 0.12;
+                    spotlight.style.transform = 'translate3d(' + (currentX - 300) + 'px, ' + (currentY - 300) + 'px, 0)';
+                    requestAnimationFrame(renderSpotlight);
+                }
+                requestAnimationFrame(renderSpotlight);
+            }
+        })();
+    </script>
+
     <!-- Live Chat -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/supabase-config.js"></script>
-<script src="js/chat-core.js"></script>
-<script src="js/chat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/chat-core.js"></script>
+    <script src="js/chat.js"></script>
 
 </body>
 </html>
